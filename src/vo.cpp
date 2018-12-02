@@ -29,9 +29,11 @@ void VO::featureMatching()
   
   vector<cv::DMatch> matches;
   cv::BFMatcher matcher(cv::NORM_HAMMING);
-  matcher.match(desc_curr_, desc_ref_, matches);
+  //matcher.match(desc_curr_, desc_ref_, matches);
+  matcher.match(desc_ref_, desc_curr_, matches);
   cout << Config::get_param("match_ratio")<<" " <<matches.size() <<endl;
-  float min_dis = std::min_element(matches.begin(), matches.end(), [](const cv::DMatch& m1, const cv::DMatch& m2){
+  float min_dis = std::min_element(matches.begin(), matches.end(),
+				   [](const cv::DMatch& m1, const cv::DMatch& m2){
     return m1.distance < m2.distance;
   })->distance;
   //int min_dis = 99999;
@@ -40,7 +42,7 @@ void VO::featureMatching()
   //    min_dis = matches[i].distance;
   //}
   
-  cout << Config::get_param("match_ratio")<<endl;
+  
   // Sort matches by score
   //std::sort(matches.begin(), matches.end()); 
   // Remove not so good matches
@@ -54,16 +56,18 @@ void VO::featureMatching()
 	  goodmatches_.push_back(m);
       }
   }
-  cout << min_dis << "good matches: " << goodmatches_.size() << endl;
+  cout << min_dis << " " << Config::get_param("match_ratio") << "good matches: " << goodmatches_.size() << endl;
 }
 
 void VO::PosePnP()
 {
   vector<cv::Point3f> pts3d;
   vector<cv::Point2f> pts2d;
-  for(auto m: goodmatches_) {
+  cout << goodmatches_.size() << "pnp " << endl;
+  for(cv::DMatch m: goodmatches_) {
       pts3d.push_back(pts_3d_ref_[m.queryIdx]);
       pts2d.push_back(keypoints_curr_[m.trainIdx].pt);
+      //cout << keypoints_curr_[m.trainIdx].pt<<endl;
   }
   
   //Mat mat0 = (Mat_(3, 3) << 10, 9, 8, 7, 6, 5, 4, 3, 2)
@@ -94,10 +98,12 @@ void VO::updateRef()
   for(int i=0; i<keypoints_curr_.size(); ++i) {
       double d = ref_->findDepth(keypoints_curr_[i]);
       if (d > 0) {
-	Vector3d p_cam = ref_->camera_->p2c(Vector2d(keypoints_curr_[i].pt.x, keypoints_curr_[i].pt.y), d);
+	Vector3d p_cam = ref_->camera_->p2c(
+	  Vector2d(keypoints_curr_[i].pt.x, keypoints_curr_[i].pt.y), d);
 	pts_3d_ref_.push_back(cv::Point3f(p_cam(0, 0), p_cam(1, 0), p_cam(2, 0)));
 	desc_ref_.push_back(desc_curr_.row(i));
 	//cout << desc_curr_.row(i) << endl;;
+	//cout << p_cam << endl;
 	
       }
   }
