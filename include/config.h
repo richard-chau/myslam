@@ -3,7 +3,7 @@
 
 #include "common_include.h"
 
-namespace myslam {
+namespace betaslam {
 class Config {
 private:
   static std::shared_ptr<Config> config_;
@@ -23,15 +23,15 @@ public:
   //    config_->kmap["camera_fx"] = 517.3;
   //}
   
-  template<typename T> 
-  static T get(const std::string &key) {
-    if (key == "dataset_dir")
+  
+  static string get_dataset(const std::string &key) {
       return Config::config_->dataset_dir;
-    //else 
-      //return Config::config_->kmap(key);
   }
   
-};  
+  static float get_param(const std::string &key) {
+    return Config::config_->kmap[key];
+  }
+ };  
 }
 
 

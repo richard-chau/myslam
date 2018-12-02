@@ -1,6 +1,6 @@
 #include "config.h"
 
-namespace myslam {
+namespace betaslam {
   shared_ptr<Config> Config::config_ = nullptr;
   
   void Config::create() {

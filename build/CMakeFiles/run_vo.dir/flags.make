@@ -6,5 +6,5 @@ CXX_FLAGS = -std=c++11 -march=native -O3 -g
 
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/home/winter/Desktop/slam/myslam/include 
+CXX_INCLUDES = -isystem /usr/local/include -isystem /usr/local/include/opencv -I/home/winter/Desktop/slam/myslam/include 
 
