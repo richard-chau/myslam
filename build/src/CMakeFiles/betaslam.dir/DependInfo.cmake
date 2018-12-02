@@ -7,6 +7,7 @@ set(CMAKE_DEPENDS_CHECK_CXX
   "/home/winter/Desktop/slam/myslam/src/camera.cpp" "/home/winter/Desktop/slam/myslam/build/src/CMakeFiles/betaslam.dir/camera.cpp.o"
   "/home/winter/Desktop/slam/myslam/src/config.cpp" "/home/winter/Desktop/slam/myslam/build/src/CMakeFiles/betaslam.dir/config.cpp.o"
   "/home/winter/Desktop/slam/myslam/src/frame.cpp" "/home/winter/Desktop/slam/myslam/build/src/CMakeFiles/betaslam.dir/frame.cpp.o"
+  "/home/winter/Desktop/slam/myslam/src/vo.cpp" "/home/winter/Desktop/slam/myslam/build/src/CMakeFiles/betaslam.dir/vo.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

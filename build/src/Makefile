@@ -206,6 +206,33 @@ frame.cpp.s:
 	cd /home/winter/Desktop/slam/myslam/build && $(MAKE) -f src/CMakeFiles/betaslam.dir/build.make src/CMakeFiles/betaslam.dir/frame.cpp.s
 .PHONY : frame.cpp.s
 
+vo.o: vo.cpp.o
+
+.PHONY : vo.o
+
+# target to build an object file
+vo.cpp.o:
+	cd /home/winter/Desktop/slam/myslam/build && $(MAKE) -f src/CMakeFiles/betaslam.dir/build.make src/CMakeFiles/betaslam.dir/vo.cpp.o
+.PHONY : vo.cpp.o
+
+vo.i: vo.cpp.i
+
+.PHONY : vo.i
+
+# target to preprocess a source file
+vo.cpp.i:
+	cd /home/winter/Desktop/slam/myslam/build && $(MAKE) -f src/CMakeFiles/betaslam.dir/build.make src/CMakeFiles/betaslam.dir/vo.cpp.i
+.PHONY : vo.cpp.i
+
+vo.s: vo.cpp.s
+
+.PHONY : vo.s
+
+# target to generate assembly for a file
+vo.cpp.s:
+	cd /home/winter/Desktop/slam/myslam/build && $(MAKE) -f src/CMakeFiles/betaslam.dir/build.make src/CMakeFiles/betaslam.dir/vo.cpp.s
+.PHONY : vo.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -224,6 +251,9 @@ help:
 	@echo "... frame.o"
 	@echo "... frame.i"
 	@echo "... frame.s"
+	@echo "... vo.o"
+	@echo "... vo.i"
+	@echo "... vo.s"
 .PHONY : help
 
 

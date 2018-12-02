@@ -5,6 +5,7 @@ CMakeFiles/run_vo.dir/main.cpp.o: ../include/betaslam/camera.h
 CMakeFiles/run_vo.dir/main.cpp.o: ../include/betaslam/common_include.h
 CMakeFiles/run_vo.dir/main.cpp.o: ../include/betaslam/config.h
 CMakeFiles/run_vo.dir/main.cpp.o: ../include/betaslam/frame.h
+CMakeFiles/run_vo.dir/main.cpp.o: ../include/betaslam/vo.h
 CMakeFiles/run_vo.dir/main.cpp.o: ../main.cpp
 CMakeFiles/run_vo.dir/main.cpp.o: /home/winter/Desktop/slam/slambook-master/3rdparty/Sophus/sophus/se3.h
 CMakeFiles/run_vo.dir/main.cpp.o: /home/winter/Desktop/slam/slambook-master/3rdparty/Sophus/sophus/so3.h

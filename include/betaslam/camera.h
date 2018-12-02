@@ -17,8 +17,8 @@ namespace betaslam {
    Vector3d w2c (const Vector3d& p_w, const SE3& Tcw);
    Vector3d c2w (const Vector3d& p_c, const SE3& Tcw);
    Vector2d c2p (const Vector3d& p_c);
-   Vector3d p2c (const Vector3d& p_p, double depth=1);
-   Vector3d p2w (const Vector3d& p_p, const SE3& Tcw, double depth=1);
+   Vector3d p2c (const Vector2d& p_p, double depth=1);
+   Vector3d p2w (const Vector2d& p_p, const SE3& Tcw, double depth=1);
    Vector2d w2p (const Vector3d& p_w, const SE3& Tcw);
    
  };

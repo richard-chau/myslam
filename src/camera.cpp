@@ -25,7 +25,7 @@ Vector2d Camera::c2p(const Vector3d& p_c)
   return Vector2d (fx_ * p_c(0, 0) / p_c(2, 0) + cx_, fy_ * p_c(1, 0) / p_c(2, 0) + cy_);
 }
 
-Vector3d Camera::p2c(const Vector3d& p_p, double depth)
+Vector3d Camera::p2c(const Vector2d& p_p, double depth)
 {
   return Vector3d (
 	  ( p_p(0,0) - cx_ ) * depth / fx_,
@@ -34,7 +34,7 @@ Vector3d Camera::p2c(const Vector3d& p_p, double depth)
 	 );
 }
 
-Vector3d Camera::p2w(const Vector3d& p_p, const SE3& Tcw, double depth)
+Vector3d Camera::p2w(const Vector2d& p_p, const SE3& Tcw, double depth)
 {
   return c2w(p2c(p_p, depth), Tcw);
 }

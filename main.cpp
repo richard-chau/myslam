@@ -7,6 +7,7 @@
 #include <opencv2/viz.hpp> 
 
 #include "betaslam/config.h"
+#include "betaslam/vo.h"
 #include "betaslam/frame.h"
 #include <boost/timer.hpp>
 
@@ -44,8 +45,8 @@ int main(int argc, char **argv) {
     }
     
     cout<<"read total "<<rgb_files.size() <<" entries"<<endl;
-    betaslam::Camera::Ptr camera(new betaslam::Camera());
-    
+    betaslam::Camera::Ptr camera(new betaslam::Camera); //or write func createcamera in class
+    betaslam::VO::Ptr vo(new betaslam::VO);
     
     for(int i=0; i<rgb_files.size(); ++i) {
 	Mat color = cv::imread(rgb_files[i]);
@@ -55,6 +56,9 @@ int main(int argc, char **argv) {
 	pFrame->camera_ = camera; pFrame->color_ = color;  pFrame->depth_ = depth; pFrame->time_stamp_ = rgb_times[i];
 	
 	boost::timer timer;
+	vo->addFrame(pFrame);
+	cout << "VO time of one frame" << timer.elapsed() << endl;
+	
 	
 	
 	//cv::namedWindow("Display Image", cv::WINDOW_AUTOSIZE );

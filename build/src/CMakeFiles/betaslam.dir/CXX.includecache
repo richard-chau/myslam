@@ -48,6 +48,12 @@ betaslam/common_include.h
 betaslam/camera.h
 ../include/betaslam/betaslam/camera.h
 
+../include/betaslam/vo.h
+betaslam/common_include.h
+../include/betaslam/betaslam/common_include.h
+betaslam/frame.h
+../include/betaslam/betaslam/frame.h
+
 /home/winter/Desktop/slam/myslam/src/camera.cpp
 betaslam/camera.h
 /home/winter/Desktop/slam/myslam/src/betaslam/camera.h
@@ -61,6 +67,18 @@ betaslam/config.h
 /home/winter/Desktop/slam/myslam/src/frame.cpp
 betaslam/frame.h
 /home/winter/Desktop/slam/myslam/src/betaslam/frame.h
+
+/home/winter/Desktop/slam/myslam/src/vo.cpp
+betaslam/vo.h
+/home/winter/Desktop/slam/myslam/src/betaslam/vo.h
+betaslam/config.h
+/home/winter/Desktop/slam/myslam/src/betaslam/config.h
+opencv2/highgui/highgui.hpp
+-
+opencv2/imgproc/imgproc.hpp
+-
+opencv2/calib3d/calib3d.hpp
+-
 
 /home/winter/Desktop/slam/slambook-master/3rdparty/Sophus/sophus/se3.h
 so3.h
@@ -936,6 +954,10 @@ opencv2/core/affine.hpp
 opencv2/calib3d/calib3d_c.h
 /usr/local/include/opencv2/opencv2/calib3d/calib3d_c.h
 
+/usr/local/include/opencv2/calib3d/calib3d.hpp
+opencv2/calib3d.hpp
+/usr/local/include/opencv2/calib3d/opencv2/calib3d.hpp
+
 /usr/local/include/opencv2/calib3d/calib3d_c.h
 opencv2/core/core_c.h
 /usr/local/include/opencv2/calib3d/opencv2/core/core_c.h
@@ -1702,6 +1724,10 @@ opencv2/videoio.hpp
 opencv2/highgui/highgui_c.h
 /usr/local/include/opencv2/opencv2/highgui/highgui_c.h
 
+/usr/local/include/opencv2/highgui/highgui.hpp
+opencv2/highgui.hpp
+/usr/local/include/opencv2/highgui/opencv2/highgui.hpp
+
 /usr/local/include/opencv2/highgui/highgui_c.h
 opencv2/core/core_c.h
 /usr/local/include/opencv2/highgui/opencv2/core/core_c.h
@@ -1755,6 +1781,10 @@ opencv2/highgui.hpp
 /usr/local/include/opencv2/opencv2/highgui.hpp
 opencv2/imgproc/imgproc_c.h
 /usr/local/include/opencv2/opencv2/imgproc/imgproc_c.h
+
+/usr/local/include/opencv2/imgproc/imgproc.hpp
+opencv2/imgproc.hpp
+/usr/local/include/opencv2/imgproc/opencv2/imgproc.hpp
 
 /usr/local/include/opencv2/imgproc/imgproc_c.h
 opencv2/imgproc/types_c.h

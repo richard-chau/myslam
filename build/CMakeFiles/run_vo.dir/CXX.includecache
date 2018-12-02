@@ -48,6 +48,12 @@ betaslam/common_include.h
 betaslam/camera.h
 ../include/betaslam/betaslam/camera.h
 
+../include/betaslam/vo.h
+betaslam/common_include.h
+../include/betaslam/betaslam/common_include.h
+betaslam/frame.h
+../include/betaslam/betaslam/frame.h
+
 /home/winter/Desktop/slam/myslam/main.cpp
 iostream
 -
@@ -63,6 +69,8 @@ opencv2/viz.hpp
 -
 betaslam/config.h
 /home/winter/Desktop/slam/myslam/betaslam/config.h
+betaslam/vo.h
+/home/winter/Desktop/slam/myslam/betaslam/vo.h
 betaslam/frame.h
 /home/winter/Desktop/slam/myslam/betaslam/frame.h
 boost/timer.hpp
