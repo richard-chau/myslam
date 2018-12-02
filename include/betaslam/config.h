@@ -1,7 +1,7 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#include "common_include.h"
+#include "betaslam/common_include.h"
 
 namespace betaslam {
 class Config {

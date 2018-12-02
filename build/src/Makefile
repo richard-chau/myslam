@@ -125,6 +125,33 @@ betaslam/fast:
 	cd /home/winter/Desktop/slam/myslam/build && $(MAKE) -f src/CMakeFiles/betaslam.dir/build.make src/CMakeFiles/betaslam.dir/build
 .PHONY : betaslam/fast
 
+camera.o: camera.cpp.o
+
+.PHONY : camera.o
+
+# target to build an object file
+camera.cpp.o:
+	cd /home/winter/Desktop/slam/myslam/build && $(MAKE) -f src/CMakeFiles/betaslam.dir/build.make src/CMakeFiles/betaslam.dir/camera.cpp.o
+.PHONY : camera.cpp.o
+
+camera.i: camera.cpp.i
+
+.PHONY : camera.i
+
+# target to preprocess a source file
+camera.cpp.i:
+	cd /home/winter/Desktop/slam/myslam/build && $(MAKE) -f src/CMakeFiles/betaslam.dir/build.make src/CMakeFiles/betaslam.dir/camera.cpp.i
+.PHONY : camera.cpp.i
+
+camera.s: camera.cpp.s
+
+.PHONY : camera.s
+
+# target to generate assembly for a file
+camera.cpp.s:
+	cd /home/winter/Desktop/slam/myslam/build && $(MAKE) -f src/CMakeFiles/betaslam.dir/build.make src/CMakeFiles/betaslam.dir/camera.cpp.s
+.PHONY : camera.cpp.s
+
 config.o: config.cpp.o
 
 .PHONY : config.o
@@ -152,6 +179,33 @@ config.cpp.s:
 	cd /home/winter/Desktop/slam/myslam/build && $(MAKE) -f src/CMakeFiles/betaslam.dir/build.make src/CMakeFiles/betaslam.dir/config.cpp.s
 .PHONY : config.cpp.s
 
+frame.o: frame.cpp.o
+
+.PHONY : frame.o
+
+# target to build an object file
+frame.cpp.o:
+	cd /home/winter/Desktop/slam/myslam/build && $(MAKE) -f src/CMakeFiles/betaslam.dir/build.make src/CMakeFiles/betaslam.dir/frame.cpp.o
+.PHONY : frame.cpp.o
+
+frame.i: frame.cpp.i
+
+.PHONY : frame.i
+
+# target to preprocess a source file
+frame.cpp.i:
+	cd /home/winter/Desktop/slam/myslam/build && $(MAKE) -f src/CMakeFiles/betaslam.dir/build.make src/CMakeFiles/betaslam.dir/frame.cpp.i
+.PHONY : frame.cpp.i
+
+frame.s: frame.cpp.s
+
+.PHONY : frame.s
+
+# target to generate assembly for a file
+frame.cpp.s:
+	cd /home/winter/Desktop/slam/myslam/build && $(MAKE) -f src/CMakeFiles/betaslam.dir/build.make src/CMakeFiles/betaslam.dir/frame.cpp.s
+.PHONY : frame.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -161,9 +215,15 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... betaslam"
+	@echo "... camera.o"
+	@echo "... camera.i"
+	@echo "... camera.s"
 	@echo "... config.o"
 	@echo "... config.i"
 	@echo "... config.s"
+	@echo "... frame.o"
+	@echo "... frame.i"
+	@echo "... frame.s"
 .PHONY : help
 
 

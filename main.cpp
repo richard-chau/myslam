@@ -6,7 +6,8 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/viz.hpp> 
 
-#include "config.h"
+#include "betaslam/config.h"
+#include <boost/timer.hpp>
 
 
 int main(int argc, char **argv) {
