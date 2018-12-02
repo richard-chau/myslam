@@ -7,6 +7,7 @@
 #include <opencv2/viz.hpp> 
 
 #include "betaslam/config.h"
+#include "betaslam/frame.h"
 #include <boost/timer.hpp>
 
 
@@ -24,6 +25,8 @@ int main(int argc, char **argv) {
     vector<string> rgb_files, depth_files;
     vector<double> rgb_times, depth_times;
     int i=0;
+    
+    
     while( !fin.eof() ) {
 	string rgb_time, rgb_file, depth_time, depth_file;
 	fin >> rgb_time >> rgb_file >> depth_time >> depth_file;
@@ -41,11 +44,17 @@ int main(int argc, char **argv) {
     }
     
     cout<<"read total "<<rgb_files.size() <<" entries"<<endl;
+    betaslam::Camera::Ptr camera(new betaslam::Camera());
+    
     
     for(int i=0; i<rgb_files.size(); ++i) {
 	Mat color = cv::imread(rgb_files[i]);
 	Mat depth = cv::imread(depth_files[i], -1);
 	
+	betaslam::Frame::Ptr pFrame = betaslam::Frame::createFrame();
+	pFrame->camera_ = camera; pFrame->color_ = color;  pFrame->depth_ = depth; pFrame->time_stamp_ = rgb_times[i];
+	
+	boost::timer timer;
 	
 	
 	//cv::namedWindow("Display Image", cv::WINDOW_AUTOSIZE );

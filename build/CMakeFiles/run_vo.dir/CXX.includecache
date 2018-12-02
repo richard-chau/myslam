@@ -6,6 +6,10 @@
 
 #IncludeRegexTransform: 
 
+../include/betaslam/camera.h
+betaslam/common_include.h
+../include/betaslam/betaslam/common_include.h
+
 ../include/betaslam/common_include.h
 Eigen/Core
 -
@@ -38,6 +42,12 @@ map
 betaslam/common_include.h
 ../include/betaslam/betaslam/common_include.h
 
+../include/betaslam/frame.h
+betaslam/common_include.h
+../include/betaslam/betaslam/common_include.h
+betaslam/camera.h
+../include/betaslam/betaslam/camera.h
+
 /home/winter/Desktop/slam/myslam/main.cpp
 iostream
 -
@@ -53,6 +63,8 @@ opencv2/viz.hpp
 -
 betaslam/config.h
 /home/winter/Desktop/slam/myslam/betaslam/config.h
+betaslam/frame.h
+/home/winter/Desktop/slam/myslam/betaslam/frame.h
 boost/timer.hpp
 -
 
