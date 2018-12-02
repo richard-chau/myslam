@@ -15,22 +15,32 @@ void VO::extractKAD()
   //std::vector<cv::KeyPoint> keypoints_curr;
   //Mat desc_curr, desc_ref;
   //std::vector<DMatch> matches;
-  cv::Ptr<cv::ORB> orb_ = cv::ORB::create ( Config::get_param("num_of_features_"), 
-					    Config::get_param("scale_factor_"), 
-					    Config::get_param("level_pyramid_" ));
+  //cout << "param" << Config::get_param("number_of_features") << Config::get_param("scale_factor") << Config::get_param("level_pyramid" ) << endl;
+  cv::Ptr<cv::ORB> orb_ = cv::ORB::create ( Config::get_param("number_of_features"), 
+					    Config::get_param("scale_factor"), 
+					    Config::get_param("level_pyramid" ));
+  //cout << curr_->color_.rows << curr_ ->color_.row(0) << endl;
   orb_->detect ( curr_->color_, keypoints_curr_);
   orb_->compute ( curr_->color_, keypoints_curr_, desc_curr_ );
 }
 
 void VO::featureMatching()
 {
+  
   vector<cv::DMatch> matches;
   cv::BFMatcher matcher(cv::NORM_HAMMING);
   matcher.match(desc_curr_, desc_ref_, matches);
+  cout << Config::get_param("match_ratio")<<" " <<matches.size() <<endl;
   float min_dis = std::min_element(matches.begin(), matches.end(), [](const cv::DMatch& m1, const cv::DMatch& m2){
     return m1.distance < m2.distance;
   })->distance;
-   
+  //int min_dis = 99999;
+  //for(int i=0; i<matches.size(); ++i) {
+  //  if (matches[i].distance < min_dis) 
+  //    min_dis = matches[i].distance;
+  //}
+  
+  cout << Config::get_param("match_ratio")<<endl;
   // Sort matches by score
   //std::sort(matches.begin(), matches.end()); 
   // Remove not so good matches
@@ -38,12 +48,13 @@ void VO::featureMatching()
   //matches.erase(matches.begin()+numGoodMatches, matches.end());
   
   goodmatches_.clear();
+  
   for(auto &m: matches) {
-      if (m.distance < max(min_dis * Config::get_param("match_ratio_"), float(30.0))) {
+      if (m.distance < max(min_dis * Config::get_param("match_ratio"), float(30.0))) {
 	  goodmatches_.push_back(m);
       }
   }
-  cout << "good matches: " << goodmatches_.size() << endl;
+  cout << min_dis << "good matches: " << goodmatches_.size() << endl;
 }
 
 void VO::PosePnP()
@@ -62,7 +73,7 @@ void VO::PosePnP()
   //Mat mat4 = Mat::zeros(3,3,CV_32F);//cout << "mat4=" << endl << mat4 << endl << endl;
 
   Mat K = ( cv::Mat_<double>(3,3) << ref_->camera_->fx_, 0, ref_->camera_->cx_, 
-	    0, ref_->camera_->fy_, 0 , ref_->camera_->cy_, 0, 0, 1 );
+	    0, ref_->camera_->fy_,  ref_->camera_->cy_, 0, 0, 1 );
   Mat rvec, tvec, inliers; //rotation vector 
   cv::solvePnPRansac(pts3d, pts2d, K, Mat(), rvec, tvec, false, 100, 4.0, 0.99, inliers);
   num_inliers_ = inliers.rows;
@@ -79,12 +90,15 @@ void VO::updateRef()
   //desc_ref_
   pts_3d_ref_.clear(); //vector
   desc_ref_ = Mat(); //Mat()
+  //cout << keypoints_curr_.size() << "fsad " << endl;
   for(int i=0; i<keypoints_curr_.size(); ++i) {
       double d = ref_->findDepth(keypoints_curr_[i]);
       if (d > 0) {
 	Vector3d p_cam = ref_->camera_->p2c(Vector2d(keypoints_curr_[i].pt.x, keypoints_curr_[i].pt.y), d);
 	pts_3d_ref_.push_back(cv::Point3f(p_cam(0, 0), p_cam(1, 0), p_cam(2, 0)));
 	desc_ref_.push_back(desc_curr_.row(i));
+	//cout << desc_curr_.row(i) << endl;;
+	
       }
   }
 }
@@ -93,7 +107,7 @@ void VO::updateRef()
 bool VO::checkgoodPose()
 {
 // check if the estimated pose is good
-    if ( num_inliers_ < Config::get_param("min_inliers_") )
+    if ( num_inliers_ < Config::get_param("min_inliers") )
     {
         cout<<"reject because inlier is too small: "<<num_inliers_<<endl;
         return false;
@@ -111,6 +125,8 @@ bool VO::checkgoodPose()
 
 bool VO::addFrame(Frame::Ptr frame)
 {
+  
+  
   switch(state_) {
     case INITIALIZING: {
      state_ = OK;
@@ -120,9 +136,12 @@ bool VO::addFrame(Frame::Ptr frame)
      break;
     }
     case OK: {
+      
      curr_ = frame;
      extractKAD();
+    
      featureMatching();
+     
      PosePnP();
      
      if (checkgoodPose()) {

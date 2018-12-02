@@ -31,7 +31,7 @@ int main(int argc, char **argv) {
     while( !fin.eof() ) {
 	string rgb_time, rgb_file, depth_time, depth_file;
 	fin >> rgb_time >> rgb_file >> depth_time >> depth_file;
-	cout << i++ << rgb_time <<  " " << depth_time << " " << atof ( rgb_time.c_str())<< endl;
+	//cout << i++ << rgb_time <<  " " << depth_time << " " << atof ( rgb_time.c_str())<< endl;
 	//rgb_times.push_back ( atof ( rgb_time.c_str() ) ); //if we use this, the last one is 0
         //depth_times.push_back ( atof ( depth_time.c_str() ) );
 	
@@ -48,7 +48,20 @@ int main(int argc, char **argv) {
     betaslam::Camera::Ptr camera(new betaslam::Camera); //or write func createcamera in class
     betaslam::VO::Ptr vo(new betaslam::VO);
     
+     // visualization
+    cv::viz::Viz3d vis("Visual Odometry");
+    cv::viz::WCoordinateSystem world_coor(1.0), camera_coor(0.5);
+    cv::Point3d cam_pos( 0, -1.0, -1.0 ), cam_focal_point(0,0,0), cam_y_dir(0,1,0);
+    cv::Affine3d cam_pose = cv::viz::makeCameraPose( cam_pos, cam_focal_point, cam_y_dir );
+    vis.setViewerPose( cam_pose );
+    
+    world_coor.setRenderingProperty(cv::viz::LINE_WIDTH, 2.0);
+    camera_coor.setRenderingProperty(cv::viz::LINE_WIDTH, 1.0);
+    vis.showWidget( "World", world_coor );
+    vis.showWidget( "Camera", camera_coor );
+    
     for(int i=0; i<rgb_files.size(); ++i) {
+     
 	Mat color = cv::imread(rgb_files[i]);
 	Mat depth = cv::imread(depth_files[i], -1);
 	
@@ -57,14 +70,35 @@ int main(int argc, char **argv) {
 	
 	boost::timer timer;
 	vo->addFrame(pFrame);
+	
 	cout << "VO time of one frame" << timer.elapsed() << endl;
 	
+	if ( vo->state_ == betaslam::VO::LOST )
+            break;
+        SE3 Tcw = pFrame->Tcw_.inverse();
+        
+        // show the map and the camera pose 
+        cv::Affine3d M(
+            cv::Affine3d::Mat3( 
+                Tcw.rotation_matrix()(0,0), Tcw.rotation_matrix()(0,1), Tcw.rotation_matrix()(0,2),
+                Tcw.rotation_matrix()(1,0), Tcw.rotation_matrix()(1,1), Tcw.rotation_matrix()(1,2),
+                Tcw.rotation_matrix()(2,0), Tcw.rotation_matrix()(2,1), Tcw.rotation_matrix()(2,2)
+            ), 
+            cv::Affine3d::Vec3(
+                Tcw.translation()(0,0), Tcw.translation()(1,0), Tcw.translation()(2,0)
+            )
+        );
+        
+        cv::imshow("image", color );
+        cv::waitKey(1);
+        vis.setWidgetPose( "Camera", M);
+        vis.spinOnce(1, false);
 	
 	
 	//cv::namedWindow("Display Image", cv::WINDOW_AUTOSIZE );
 	//cv::imshow("Display Image", color);
 	//cv::waitKey(0);
-	break;
+	if (i == 2) break;
     }
     
     

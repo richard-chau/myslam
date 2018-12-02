@@ -14,7 +14,8 @@ public:
   Frame::Ptr curr_, ref_;
   
   std::vector<cv::KeyPoint> keypoints_curr_;
-  Mat desc_curr_, desc_ref_;
+  Mat desc_curr_;
+  Mat desc_ref_;
   std::vector<cv::DMatch> goodmatches_;
   
   vector<cv::Point3f> pts_3d_ref_;

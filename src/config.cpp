@@ -21,6 +21,7 @@ namespace betaslam {
       config_->kmap["max_num_lost"] = 10;
       config_->kmap["keyframe_rotation"] = 0.1;
       config_->kmap["keyframe_translation"] = 0.1;
+      config_->kmap["min_inliers"] = 10;
     }
   }
 }
