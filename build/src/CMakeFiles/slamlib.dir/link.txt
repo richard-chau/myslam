@@ -1,0 +1,1 @@
+g++  -fPIC -std=c++11 -march=native -O3 -g  -shared -Wl,-soname,libslamlib.so -o ../../lib/libslamlib.so CMakeFiles/slamlib.dir/config.cpp.o 

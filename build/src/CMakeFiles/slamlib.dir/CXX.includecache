@@ -1,0 +1,34 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../include/common_include.h
+vector
+-
+list
+-
+memory
+-
+iostream
+-
+string
+-
+set
+-
+unordered_map
+-
+map
+-
+
+../include/config.h
+common_include.h
+../include/common_include.h
+
+/home/winter/Desktop/slam/myslam/src/config.cpp
+config.h
+/home/winter/Desktop/slam/myslam/src/config.h
+

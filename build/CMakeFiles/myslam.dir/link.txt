@@ -1,0 +1,1 @@
+g++   -std=c++11 -march=native -O3 -g   CMakeFiles/myslam.dir/main.cpp.o  -o ../bin/myslam -rdynamic 
