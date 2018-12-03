@@ -3,6 +3,7 @@ add_library( betaslam SHARED
     frame.cpp
     camera.cpp
     vo.cpp
+    g2o_types.cpp
 )
 
 target_link_libraries( betaslam

@@ -6,9 +6,9 @@ CMakeFiles/run_vo.dir/main.cpp.o: ../include/betaslam/common_include.h
 CMakeFiles/run_vo.dir/main.cpp.o: ../include/betaslam/config.h
 CMakeFiles/run_vo.dir/main.cpp.o: ../include/betaslam/frame.h
 CMakeFiles/run_vo.dir/main.cpp.o: ../include/betaslam/vo.h
-CMakeFiles/run_vo.dir/main.cpp.o: ../main.cpp
 CMakeFiles/run_vo.dir/main.cpp.o: /home/winter/Desktop/slam/slambook-master/3rdparty/Sophus/sophus/se3.h
 CMakeFiles/run_vo.dir/main.cpp.o: /home/winter/Desktop/slam/slambook-master/3rdparty/Sophus/sophus/so3.h
+CMakeFiles/run_vo.dir/main.cpp.o: ../main.cpp
 CMakeFiles/run_vo.dir/main.cpp.o: /usr/include/eigen3/Eigen/Cholesky
 CMakeFiles/run_vo.dir/main.cpp.o: /usr/include/eigen3/Eigen/Core
 CMakeFiles/run_vo.dir/main.cpp.o: /usr/include/eigen3/Eigen/Geometry
@@ -221,6 +221,7 @@ CMakeFiles/run_vo.dir/main.cpp.o: /usr/local/include/opencv2/core/utility.hpp
 CMakeFiles/run_vo.dir/main.cpp.o: /usr/local/include/opencv2/core/version.hpp
 CMakeFiles/run_vo.dir/main.cpp.o: /usr/local/include/opencv2/core/vsx_utils.hpp
 CMakeFiles/run_vo.dir/main.cpp.o: /usr/local/include/opencv2/features2d.hpp
+CMakeFiles/run_vo.dir/main.cpp.o: /usr/local/include/opencv2/features2d/features2d.hpp
 CMakeFiles/run_vo.dir/main.cpp.o: /usr/local/include/opencv2/flann.hpp
 CMakeFiles/run_vo.dir/main.cpp.o: /usr/local/include/opencv2/flann/all_indices.h
 CMakeFiles/run_vo.dir/main.cpp.o: /usr/local/include/opencv2/flann/allocator.h

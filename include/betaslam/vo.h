@@ -4,6 +4,8 @@
 #include "betaslam/common_include.h"
 #include "betaslam/frame.h"
 
+#include <opencv2/features2d/features2d.hpp>
+
 namespace betaslam {
 
 class VO{
@@ -30,7 +32,9 @@ public:
     };
   VOState state_;
   
-  VO(): state_(INITIALIZING), ref_(nullptr), curr_(nullptr), num_inliers_(0), num_lost_(0){}
+  cv::FlannBasedMatcher matcher;
+  VO(): state_(INITIALIZING), ref_(nullptr), curr_(nullptr), num_inliers_(0), num_lost_(0),
+	matcher(new cv::flann::LshIndexParams(5,10,2)){}
   ~VO(){}
   bool addFrame(Frame::Ptr frame);
   

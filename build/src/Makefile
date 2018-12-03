@@ -48,10 +48,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/winter/Desktop/slam/myslam
+CMAKE_SOURCE_DIR = /home/winter/Desktop/slam/slambook-master/project/newslam
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/winter/Desktop/slam/myslam/build
+CMAKE_BINARY_DIR = /home/winter/Desktop/slam/slambook-master/project/newslam/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -80,14 +80,14 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	cd /home/winter/Desktop/slam/myslam/build && $(CMAKE_COMMAND) -E cmake_progress_start /home/winter/Desktop/slam/myslam/build/CMakeFiles /home/winter/Desktop/slam/myslam/build/src/CMakeFiles/progress.marks
-	cd /home/winter/Desktop/slam/myslam/build && $(MAKE) -f CMakeFiles/Makefile2 src/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/winter/Desktop/slam/myslam/build/CMakeFiles 0
+	cd /home/winter/Desktop/slam/slambook-master/project/newslam/build && $(CMAKE_COMMAND) -E cmake_progress_start /home/winter/Desktop/slam/slambook-master/project/newslam/build/CMakeFiles /home/winter/Desktop/slam/slambook-master/project/newslam/build/src/CMakeFiles/progress.marks
+	cd /home/winter/Desktop/slam/slambook-master/project/newslam/build && $(MAKE) -f CMakeFiles/Makefile2 src/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/winter/Desktop/slam/slambook-master/project/newslam/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	cd /home/winter/Desktop/slam/myslam/build && $(MAKE) -f CMakeFiles/Makefile2 src/clean
+	cd /home/winter/Desktop/slam/slambook-master/project/newslam/build && $(MAKE) -f CMakeFiles/Makefile2 src/clean
 .PHONY : clean
 
 # The main clean target
@@ -97,22 +97,22 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	cd /home/winter/Desktop/slam/myslam/build && $(MAKE) -f CMakeFiles/Makefile2 src/preinstall
+	cd /home/winter/Desktop/slam/slambook-master/project/newslam/build && $(MAKE) -f CMakeFiles/Makefile2 src/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	cd /home/winter/Desktop/slam/myslam/build && $(MAKE) -f CMakeFiles/Makefile2 src/preinstall
+	cd /home/winter/Desktop/slam/slambook-master/project/newslam/build && $(MAKE) -f CMakeFiles/Makefile2 src/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	cd /home/winter/Desktop/slam/myslam/build && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd /home/winter/Desktop/slam/slambook-master/project/newslam/build && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
 # Convenience name for target.
 src/CMakeFiles/betaslam.dir/rule:
-	cd /home/winter/Desktop/slam/myslam/build && $(MAKE) -f CMakeFiles/Makefile2 src/CMakeFiles/betaslam.dir/rule
+	cd /home/winter/Desktop/slam/slambook-master/project/newslam/build && $(MAKE) -f CMakeFiles/Makefile2 src/CMakeFiles/betaslam.dir/rule
 .PHONY : src/CMakeFiles/betaslam.dir/rule
 
 # Convenience name for target.
@@ -122,7 +122,7 @@ betaslam: src/CMakeFiles/betaslam.dir/rule
 
 # fast build rule for target.
 betaslam/fast:
-	cd /home/winter/Desktop/slam/myslam/build && $(MAKE) -f src/CMakeFiles/betaslam.dir/build.make src/CMakeFiles/betaslam.dir/build
+	cd /home/winter/Desktop/slam/slambook-master/project/newslam/build && $(MAKE) -f src/CMakeFiles/betaslam.dir/build.make src/CMakeFiles/betaslam.dir/build
 .PHONY : betaslam/fast
 
 camera.o: camera.cpp.o
@@ -131,7 +131,7 @@ camera.o: camera.cpp.o
 
 # target to build an object file
 camera.cpp.o:
-	cd /home/winter/Desktop/slam/myslam/build && $(MAKE) -f src/CMakeFiles/betaslam.dir/build.make src/CMakeFiles/betaslam.dir/camera.cpp.o
+	cd /home/winter/Desktop/slam/slambook-master/project/newslam/build && $(MAKE) -f src/CMakeFiles/betaslam.dir/build.make src/CMakeFiles/betaslam.dir/camera.cpp.o
 .PHONY : camera.cpp.o
 
 camera.i: camera.cpp.i
@@ -140,7 +140,7 @@ camera.i: camera.cpp.i
 
 # target to preprocess a source file
 camera.cpp.i:
-	cd /home/winter/Desktop/slam/myslam/build && $(MAKE) -f src/CMakeFiles/betaslam.dir/build.make src/CMakeFiles/betaslam.dir/camera.cpp.i
+	cd /home/winter/Desktop/slam/slambook-master/project/newslam/build && $(MAKE) -f src/CMakeFiles/betaslam.dir/build.make src/CMakeFiles/betaslam.dir/camera.cpp.i
 .PHONY : camera.cpp.i
 
 camera.s: camera.cpp.s
@@ -149,7 +149,7 @@ camera.s: camera.cpp.s
 
 # target to generate assembly for a file
 camera.cpp.s:
-	cd /home/winter/Desktop/slam/myslam/build && $(MAKE) -f src/CMakeFiles/betaslam.dir/build.make src/CMakeFiles/betaslam.dir/camera.cpp.s
+	cd /home/winter/Desktop/slam/slambook-master/project/newslam/build && $(MAKE) -f src/CMakeFiles/betaslam.dir/build.make src/CMakeFiles/betaslam.dir/camera.cpp.s
 .PHONY : camera.cpp.s
 
 config.o: config.cpp.o
@@ -158,7 +158,7 @@ config.o: config.cpp.o
 
 # target to build an object file
 config.cpp.o:
-	cd /home/winter/Desktop/slam/myslam/build && $(MAKE) -f src/CMakeFiles/betaslam.dir/build.make src/CMakeFiles/betaslam.dir/config.cpp.o
+	cd /home/winter/Desktop/slam/slambook-master/project/newslam/build && $(MAKE) -f src/CMakeFiles/betaslam.dir/build.make src/CMakeFiles/betaslam.dir/config.cpp.o
 .PHONY : config.cpp.o
 
 config.i: config.cpp.i
@@ -167,7 +167,7 @@ config.i: config.cpp.i
 
 # target to preprocess a source file
 config.cpp.i:
-	cd /home/winter/Desktop/slam/myslam/build && $(MAKE) -f src/CMakeFiles/betaslam.dir/build.make src/CMakeFiles/betaslam.dir/config.cpp.i
+	cd /home/winter/Desktop/slam/slambook-master/project/newslam/build && $(MAKE) -f src/CMakeFiles/betaslam.dir/build.make src/CMakeFiles/betaslam.dir/config.cpp.i
 .PHONY : config.cpp.i
 
 config.s: config.cpp.s
@@ -176,7 +176,7 @@ config.s: config.cpp.s
 
 # target to generate assembly for a file
 config.cpp.s:
-	cd /home/winter/Desktop/slam/myslam/build && $(MAKE) -f src/CMakeFiles/betaslam.dir/build.make src/CMakeFiles/betaslam.dir/config.cpp.s
+	cd /home/winter/Desktop/slam/slambook-master/project/newslam/build && $(MAKE) -f src/CMakeFiles/betaslam.dir/build.make src/CMakeFiles/betaslam.dir/config.cpp.s
 .PHONY : config.cpp.s
 
 frame.o: frame.cpp.o
@@ -185,7 +185,7 @@ frame.o: frame.cpp.o
 
 # target to build an object file
 frame.cpp.o:
-	cd /home/winter/Desktop/slam/myslam/build && $(MAKE) -f src/CMakeFiles/betaslam.dir/build.make src/CMakeFiles/betaslam.dir/frame.cpp.o
+	cd /home/winter/Desktop/slam/slambook-master/project/newslam/build && $(MAKE) -f src/CMakeFiles/betaslam.dir/build.make src/CMakeFiles/betaslam.dir/frame.cpp.o
 .PHONY : frame.cpp.o
 
 frame.i: frame.cpp.i
@@ -194,7 +194,7 @@ frame.i: frame.cpp.i
 
 # target to preprocess a source file
 frame.cpp.i:
-	cd /home/winter/Desktop/slam/myslam/build && $(MAKE) -f src/CMakeFiles/betaslam.dir/build.make src/CMakeFiles/betaslam.dir/frame.cpp.i
+	cd /home/winter/Desktop/slam/slambook-master/project/newslam/build && $(MAKE) -f src/CMakeFiles/betaslam.dir/build.make src/CMakeFiles/betaslam.dir/frame.cpp.i
 .PHONY : frame.cpp.i
 
 frame.s: frame.cpp.s
@@ -203,8 +203,35 @@ frame.s: frame.cpp.s
 
 # target to generate assembly for a file
 frame.cpp.s:
-	cd /home/winter/Desktop/slam/myslam/build && $(MAKE) -f src/CMakeFiles/betaslam.dir/build.make src/CMakeFiles/betaslam.dir/frame.cpp.s
+	cd /home/winter/Desktop/slam/slambook-master/project/newslam/build && $(MAKE) -f src/CMakeFiles/betaslam.dir/build.make src/CMakeFiles/betaslam.dir/frame.cpp.s
 .PHONY : frame.cpp.s
+
+g2o_types.o: g2o_types.cpp.o
+
+.PHONY : g2o_types.o
+
+# target to build an object file
+g2o_types.cpp.o:
+	cd /home/winter/Desktop/slam/slambook-master/project/newslam/build && $(MAKE) -f src/CMakeFiles/betaslam.dir/build.make src/CMakeFiles/betaslam.dir/g2o_types.cpp.o
+.PHONY : g2o_types.cpp.o
+
+g2o_types.i: g2o_types.cpp.i
+
+.PHONY : g2o_types.i
+
+# target to preprocess a source file
+g2o_types.cpp.i:
+	cd /home/winter/Desktop/slam/slambook-master/project/newslam/build && $(MAKE) -f src/CMakeFiles/betaslam.dir/build.make src/CMakeFiles/betaslam.dir/g2o_types.cpp.i
+.PHONY : g2o_types.cpp.i
+
+g2o_types.s: g2o_types.cpp.s
+
+.PHONY : g2o_types.s
+
+# target to generate assembly for a file
+g2o_types.cpp.s:
+	cd /home/winter/Desktop/slam/slambook-master/project/newslam/build && $(MAKE) -f src/CMakeFiles/betaslam.dir/build.make src/CMakeFiles/betaslam.dir/g2o_types.cpp.s
+.PHONY : g2o_types.cpp.s
 
 vo.o: vo.cpp.o
 
@@ -212,7 +239,7 @@ vo.o: vo.cpp.o
 
 # target to build an object file
 vo.cpp.o:
-	cd /home/winter/Desktop/slam/myslam/build && $(MAKE) -f src/CMakeFiles/betaslam.dir/build.make src/CMakeFiles/betaslam.dir/vo.cpp.o
+	cd /home/winter/Desktop/slam/slambook-master/project/newslam/build && $(MAKE) -f src/CMakeFiles/betaslam.dir/build.make src/CMakeFiles/betaslam.dir/vo.cpp.o
 .PHONY : vo.cpp.o
 
 vo.i: vo.cpp.i
@@ -221,7 +248,7 @@ vo.i: vo.cpp.i
 
 # target to preprocess a source file
 vo.cpp.i:
-	cd /home/winter/Desktop/slam/myslam/build && $(MAKE) -f src/CMakeFiles/betaslam.dir/build.make src/CMakeFiles/betaslam.dir/vo.cpp.i
+	cd /home/winter/Desktop/slam/slambook-master/project/newslam/build && $(MAKE) -f src/CMakeFiles/betaslam.dir/build.make src/CMakeFiles/betaslam.dir/vo.cpp.i
 .PHONY : vo.cpp.i
 
 vo.s: vo.cpp.s
@@ -230,7 +257,7 @@ vo.s: vo.cpp.s
 
 # target to generate assembly for a file
 vo.cpp.s:
-	cd /home/winter/Desktop/slam/myslam/build && $(MAKE) -f src/CMakeFiles/betaslam.dir/build.make src/CMakeFiles/betaslam.dir/vo.cpp.s
+	cd /home/winter/Desktop/slam/slambook-master/project/newslam/build && $(MAKE) -f src/CMakeFiles/betaslam.dir/build.make src/CMakeFiles/betaslam.dir/vo.cpp.s
 .PHONY : vo.cpp.s
 
 # Help Target
@@ -251,6 +278,9 @@ help:
 	@echo "... frame.o"
 	@echo "... frame.i"
 	@echo "... frame.s"
+	@echo "... g2o_types.o"
+	@echo "... g2o_types.i"
+	@echo "... g2o_types.s"
 	@echo "... vo.o"
 	@echo "... vo.i"
 	@echo "... vo.s"
@@ -265,6 +295,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	cd /home/winter/Desktop/slam/myslam/build && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd /home/winter/Desktop/slam/slambook-master/project/newslam/build && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 

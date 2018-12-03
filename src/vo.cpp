@@ -1,8 +1,10 @@
 #include "betaslam/vo.h"
 #include "betaslam/config.h"
+#include "betaslam/g2o_types.h"
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/calib3d/calib3d.hpp>
+#include <g2o/core/sparse_optimizer.h>
 
 
 namespace betaslam {
@@ -29,7 +31,7 @@ void VO::featureMatching()
   
   vector<cv::DMatch> matches;
   //cv::BFMatcher matcher(cv::NORM_HAMMING);
-  cv::FlannBasedMatcher matcher( new cv::flann::LshIndexParams(5,10,2));
+  //cv::FlannBasedMatcher matcher( new cv::flann::LshIndexParams(5,10,2));
   
   //matcher.match(desc_curr_, desc_ref_, matches);
   matcher.match(desc_ref_, desc_curr_, matches);
@@ -88,6 +90,85 @@ void VO::PosePnP()
 	     Vector3d(tvec.at<double>(0, 0), tvec.at<double>(1, 0), tvec.at<double>(2, 0))
 	 );
   
+  
+//   typedef g2o::BlockSolver<g2o::BlockSolverTraits<6,2> > Block;
+//   Block::LinearSolverType* linearSolver = new g2o::LinearSolverDense<Block::PoseMatrixType>();
+//   Block *solver_ptr = new Block(linearSolver);
+//   
+//   g2o::OptimizationAlgorithmLevenberg* solver = new g2o::OptimizationAlgorithmLevenberg(solver_ptr);
+//   g2o::SparseOptimizer optimizer;
+//   optimizer.setAlgorithm(solver);
+//   
+//   g2o::VertexSE3Expmap* pose = new g2o::VertexSE3Expmap();
+//   pose->setId(0);
+//   pose->setEstimate(g2o::SE3Quat(
+//     Tcr_.rotation_matrix(), Tcr_.translation())
+//   );
+//   optimizer.addVertex(pose);
+//   
+//   for(int i=0; i<inliers.rows; ++i) {
+//       int index = inliers.at<int>(i,0);
+//       EdgeProjectXYZ2UVPoseOnly* edge = new EdgeProjectXYZ2UVPoseOnly();
+//       edge->setId(i); edge->setVertex(0, pose);//pose again
+//       edge->camera_ = curr_->camera_.get();
+//       
+//       edge->point_ = Vector3d(pts3d[index].x, pts3d[index].y, pts3d[index].z);
+//       edge->setMeasurement(Vector2d(pts2d[index].x, pts2d[index].y));
+//       edge->setInformation(Eigen::Matrix2d::Identity());
+//       optimizer.addEdge(edge);
+//   }
+//   
+//   optimizer.initializeOptimization();
+//   optimizer.optimize(10);
+  
+    typedef g2o::BlockSolver<g2o::BlockSolverTraits<6,2>> Block;
+    
+    Block::LinearSolverType* linearSolver = new g2o::LinearSolverDense<Block::PoseMatrixType>();
+    Block* solver_ptr = new Block( linearSolver );
+    g2o::OptimizationAlgorithmLevenberg* solver = new g2o::OptimizationAlgorithmLevenberg ( solver_ptr );
+    g2o::SparseOptimizer optimizer;
+    optimizer.setAlgorithm ( solver );
+    
+    g2o::VertexSE3Expmap* pose = new g2o::VertexSE3Expmap();
+    pose->setId ( 0 );
+    pose->setEstimate ( g2o::SE3Quat (
+        Tcr_.rotation_matrix(), 
+        Tcr_.translation()
+    ) );
+    optimizer.addVertex ( pose );
+    
+    // edges
+    //cout << "rows: " << inliers.rows << " " << pts3d.size() << pts2d.size()<< endl;;
+    for ( int i=0; i<inliers.rows; i++ )
+    {
+	
+        int index = inliers.at<int>(i,0);
+	//cout << "afgg" << i << index << " " <<  pts3d[index]<< pts2d[index]<< endl;
+        // 3D -> 2D projection
+        EdgeProjectXYZ2UVPoseOnly* edge = new EdgeProjectXYZ2UVPoseOnly();
+        edge->setId(i);
+        edge->setVertex(0, pose);
+        edge->camera_ = curr_->camera_.get();
+        edge->point_ = Vector3d( pts3d[index].x, pts3d[index].y, pts3d[index].z );
+	
+        edge->setMeasurement( Vector2d(pts2d[index].x, pts2d[index].y) );
+        //edge->setInformation( Eigen::Matrix2d::Identity() );
+	//cout << edge->point_ << endl;
+	//cout << pts3d[index] << pts2d[index] << endl;
+        optimizer.addEdge( edge );
+	//cout << "here" << endl;
+    }
+  //cout << "herehere" << endl;
+    //optimizer.setVerbose ( true );
+    optimizer.initializeOptimization();
+    //cout << "herehere2" << endl;
+    
+    optimizer.optimize(5);
+  //cout << "afg3kk " << endl;
+  Tcr_ = SE3 (
+    pose->estimate().rotation(),
+    pose->estimate().translation()
+  );
 }
 
 void VO::updateRef()
