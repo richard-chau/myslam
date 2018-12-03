@@ -6,6 +6,8 @@ CMakeFiles/run_vo.dir/main.cpp.o
  ../include/betaslam/common_include.h
  ../include/betaslam/config.h
  ../include/betaslam/frame.h
+ ../include/betaslam/map.h
+ ../include/betaslam/mappoint.h
  ../include/betaslam/vo.h
  /home/winter/Desktop/slam/slambook-master/3rdparty/Sophus/sophus/se3.h
  /home/winter/Desktop/slam/slambook-master/3rdparty/Sophus/sophus/so3.h

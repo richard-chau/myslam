@@ -233,6 +233,33 @@ g2o_types.cpp.s:
 	cd /home/winter/Desktop/slam/slambook-master/project/newslam/build && $(MAKE) -f src/CMakeFiles/betaslam.dir/build.make src/CMakeFiles/betaslam.dir/g2o_types.cpp.s
 .PHONY : g2o_types.cpp.s
 
+mappoint.o: mappoint.cpp.o
+
+.PHONY : mappoint.o
+
+# target to build an object file
+mappoint.cpp.o:
+	cd /home/winter/Desktop/slam/slambook-master/project/newslam/build && $(MAKE) -f src/CMakeFiles/betaslam.dir/build.make src/CMakeFiles/betaslam.dir/mappoint.cpp.o
+.PHONY : mappoint.cpp.o
+
+mappoint.i: mappoint.cpp.i
+
+.PHONY : mappoint.i
+
+# target to preprocess a source file
+mappoint.cpp.i:
+	cd /home/winter/Desktop/slam/slambook-master/project/newslam/build && $(MAKE) -f src/CMakeFiles/betaslam.dir/build.make src/CMakeFiles/betaslam.dir/mappoint.cpp.i
+.PHONY : mappoint.cpp.i
+
+mappoint.s: mappoint.cpp.s
+
+.PHONY : mappoint.s
+
+# target to generate assembly for a file
+mappoint.cpp.s:
+	cd /home/winter/Desktop/slam/slambook-master/project/newslam/build && $(MAKE) -f src/CMakeFiles/betaslam.dir/build.make src/CMakeFiles/betaslam.dir/mappoint.cpp.s
+.PHONY : mappoint.cpp.s
+
 vo.o: vo.cpp.o
 
 .PHONY : vo.o
@@ -281,6 +308,9 @@ help:
 	@echo "... g2o_types.o"
 	@echo "... g2o_types.i"
 	@echo "... g2o_types.s"
+	@echo "... mappoint.o"
+	@echo "... mappoint.i"
+	@echo "... mappoint.s"
 	@echo "... vo.o"
 	@echo "... vo.i"
 	@echo "... vo.s"

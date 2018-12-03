@@ -4,6 +4,7 @@ file(REMOVE_RECURSE
   "CMakeFiles/betaslam.dir/camera.cpp.o"
   "CMakeFiles/betaslam.dir/vo.cpp.o"
   "CMakeFiles/betaslam.dir/g2o_types.cpp.o"
+  "CMakeFiles/betaslam.dir/mappoint.cpp.o"
   "../../lib/libbetaslam.pdb"
   "../../lib/libbetaslam.so"
 )

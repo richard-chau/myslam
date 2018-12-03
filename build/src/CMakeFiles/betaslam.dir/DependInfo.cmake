@@ -8,6 +8,7 @@ set(CMAKE_DEPENDS_CHECK_CXX
   "/home/winter/Desktop/slam/slambook-master/project/newslam/src/config.cpp" "/home/winter/Desktop/slam/slambook-master/project/newslam/build/src/CMakeFiles/betaslam.dir/config.cpp.o"
   "/home/winter/Desktop/slam/slambook-master/project/newslam/src/frame.cpp" "/home/winter/Desktop/slam/slambook-master/project/newslam/build/src/CMakeFiles/betaslam.dir/frame.cpp.o"
   "/home/winter/Desktop/slam/slambook-master/project/newslam/src/g2o_types.cpp" "/home/winter/Desktop/slam/slambook-master/project/newslam/build/src/CMakeFiles/betaslam.dir/g2o_types.cpp.o"
+  "/home/winter/Desktop/slam/slambook-master/project/newslam/src/mappoint.cpp" "/home/winter/Desktop/slam/slambook-master/project/newslam/build/src/CMakeFiles/betaslam.dir/mappoint.cpp.o"
   "/home/winter/Desktop/slam/slambook-master/project/newslam/src/vo.cpp" "/home/winter/Desktop/slam/slambook-master/project/newslam/build/src/CMakeFiles/betaslam.dir/vo.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")

@@ -1,10 +1,13 @@
 #include "betaslam/vo.h"
 #include "betaslam/config.h"
 #include "betaslam/g2o_types.h"
+
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/calib3d/calib3d.hpp>
 #include <g2o/core/sparse_optimizer.h>
+
+#include <boost/timer.hpp>
 
 
 namespace betaslam {
@@ -18,12 +21,13 @@ void VO::extractKAD()
   //Mat desc_curr, desc_ref;
   //std::vector<DMatch> matches;
   //cout << "param" << Config::get_param("number_of_features") << Config::get_param("scale_factor") << Config::get_param("level_pyramid" ) << endl;
-  cv::Ptr<cv::ORB> orb_ = cv::ORB::create ( Config::get_param("number_of_features"), 
-					    Config::get_param("scale_factor"), 
-					    Config::get_param("level_pyramid" ));
+  
   //cout << curr_->color_.rows << curr_ ->color_.row(0) << endl;
+  boost::timer timer;
   orb_->detect ( curr_->color_, keypoints_curr_);
   orb_->compute ( curr_->color_, keypoints_curr_, desc_curr_ );
+  cout<<"extract keypoints and compute descriptors: "<<timer.elapsed() <<endl;
+  
 }
 
 void VO::featureMatching()
@@ -32,9 +36,21 @@ void VO::featureMatching()
   vector<cv::DMatch> matches;
   //cv::BFMatcher matcher(cv::NORM_HAMMING);
   //cv::FlannBasedMatcher matcher( new cv::flann::LshIndexParams(5,10,2));
+  //matcher.match(desc_curr_, desc_ref_, matches); //wrong!!
+  //matcher.match(desc_ref_, desc_curr_, matches);
   
-  //matcher.match(desc_curr_, desc_ref_, matches);
-  matcher.match(desc_ref_, desc_curr_, matches);
+  Mat desc_map;
+  vector<MapPoint::Ptr> candidate;
+  for(auto &item : map_->map_points_) {
+      MapPoint::Ptr p = item.second;
+      if (curr_->isInFrame(p->pos_)){
+	  p->visible_times_ += 1;
+	  desc_map.push_back(p->desc_);
+	  candidate.push_back(p);
+      } //else ?? TODO
+  }
+  matcher.match(desc_map, desc_curr_, matches);
+  
   //cout << Config::get_param("match_ratio")<<" " <<matches.size() <<endl;
   float min_dis = std::min_element(matches.begin(), matches.end(),
 				   [](const cv::DMatch& m1, const cv::DMatch& m2){
@@ -53,26 +69,37 @@ void VO::featureMatching()
   //const int numGoodMatches = matches.size() * GOOD_MATCH_PERCENT;
   //matches.erase(matches.begin()+numGoodMatches, matches.end());
   
-  goodmatches_.clear();
-  
+  //goodmatches_.clear();
+  matched_2d.clear();
+  matched_inmap.clear();
   for(auto &m: matches) {
       if (m.distance < max(min_dis * Config::get_param("match_ratio"), float(30.0))) {
-	  goodmatches_.push_back(m);
+	  //goodmatches_.push_back(m);
+	  matched_inmap.push_back(candidate[m.queryIdx]);
+	  matched_2d.push_back(m.trainIdx);
       }
   }
-  cout << min_dis << " " << Config::get_param("match_ratio") << "good matches: " << goodmatches_.size() << endl;
+  //cout << min_dis << " " << Config::get_param("match_ratio") << "good matches: " << goodmatches_.size() << endl;
 }
 
 void VO::PosePnP()
 {
   vector<cv::Point3f> pts3d;
   vector<cv::Point2f> pts2d;
-  cout << goodmatches_.size() << "pnp " << endl;
-  for(cv::DMatch m: goodmatches_) {
-      pts3d.push_back(pts_3d_ref_[m.queryIdx]);
-      pts2d.push_back(keypoints_curr_[m.trainIdx].pt);
+  //cout << goodmatches_.size() << "pnp " << endl;
+  //for(cv::DMatch m: goodmatches_) {
+      //pts3d.push_back(pts_3d_ref_[m.queryIdx]);
+      //pts2d.push_back(keypoints_curr_[m.trainIdx].pt);
       //cout << keypoints_curr_[m.trainIdx].pt<<endl;
+  //}
+  for(auto i: matched_2d) {
+      pts2d.push_back(keypoints_curr_[i].pt);
   }
+  for(MapPoint::Ptr &p: matched_inmap) {
+    Vector3d pos_tmp = p->pos_;
+    pts3d.push_back(cv::Point3f( pos_tmp(0,0), pos_tmp(1,0), pos_tmp(2,0) ) ); // TODO
+  }
+  
   
   //Mat mat0 = (Mat_(3, 3) << 10, 9, 8, 7, 6, 5, 4, 3, 2)
   //Mat mat1(3,3,CV_8UC3,Scalar(100,150,255));
@@ -91,80 +118,36 @@ void VO::PosePnP()
 	 );
   
   
-//   typedef g2o::BlockSolver<g2o::BlockSolverTraits<6,2> > Block;
-//   Block::LinearSolverType* linearSolver = new g2o::LinearSolverDense<Block::PoseMatrixType>();
-//   Block *solver_ptr = new Block(linearSolver);
-//   
-//   g2o::OptimizationAlgorithmLevenberg* solver = new g2o::OptimizationAlgorithmLevenberg(solver_ptr);
-//   g2o::SparseOptimizer optimizer;
-//   optimizer.setAlgorithm(solver);
-//   
-//   g2o::VertexSE3Expmap* pose = new g2o::VertexSE3Expmap();
-//   pose->setId(0);
-//   pose->setEstimate(g2o::SE3Quat(
-//     Tcr_.rotation_matrix(), Tcr_.translation())
-//   );
-//   optimizer.addVertex(pose);
-//   
-//   for(int i=0; i<inliers.rows; ++i) {
-//       int index = inliers.at<int>(i,0);
-//       EdgeProjectXYZ2UVPoseOnly* edge = new EdgeProjectXYZ2UVPoseOnly();
-//       edge->setId(i); edge->setVertex(0, pose);//pose again
-//       edge->camera_ = curr_->camera_.get();
-//       
-//       edge->point_ = Vector3d(pts3d[index].x, pts3d[index].y, pts3d[index].z);
-//       edge->setMeasurement(Vector2d(pts2d[index].x, pts2d[index].y));
-//       edge->setInformation(Eigen::Matrix2d::Identity());
-//       optimizer.addEdge(edge);
-//   }
-//   
-//   optimizer.initializeOptimization();
-//   optimizer.optimize(10);
+  typedef g2o::BlockSolver<g2o::BlockSolverTraits<6,2> > Block;
+  Block::LinearSolverType* linearSolver = new g2o::LinearSolverDense<Block::PoseMatrixType>();
+  Block *solver_ptr = new Block(linearSolver);
   
-    typedef g2o::BlockSolver<g2o::BlockSolverTraits<6,2>> Block;
-    
-    Block::LinearSolverType* linearSolver = new g2o::LinearSolverDense<Block::PoseMatrixType>();
-    Block* solver_ptr = new Block( linearSolver );
-    g2o::OptimizationAlgorithmLevenberg* solver = new g2o::OptimizationAlgorithmLevenberg ( solver_ptr );
-    g2o::SparseOptimizer optimizer;
-    optimizer.setAlgorithm ( solver );
-    
-    g2o::VertexSE3Expmap* pose = new g2o::VertexSE3Expmap();
-    pose->setId ( 0 );
-    pose->setEstimate ( g2o::SE3Quat (
-        Tcr_.rotation_matrix(), 
-        Tcr_.translation()
-    ) );
-    optimizer.addVertex ( pose );
-    
-    // edges
-    //cout << "rows: " << inliers.rows << " " << pts3d.size() << pts2d.size()<< endl;;
-    for ( int i=0; i<inliers.rows; i++ )
-    {
-	
-        int index = inliers.at<int>(i,0);
-	//cout << "afgg" << i << index << " " <<  pts3d[index]<< pts2d[index]<< endl;
-        // 3D -> 2D projection
-        EdgeProjectXYZ2UVPoseOnly* edge = new EdgeProjectXYZ2UVPoseOnly();
-        edge->setId(i);
-        edge->setVertex(0, pose);
-        edge->camera_ = curr_->camera_.get();
-        edge->point_ = Vector3d( pts3d[index].x, pts3d[index].y, pts3d[index].z );
-	
-        edge->setMeasurement( Vector2d(pts2d[index].x, pts2d[index].y) );
-        //edge->setInformation( Eigen::Matrix2d::Identity() );
-	//cout << edge->point_ << endl;
-	//cout << pts3d[index] << pts2d[index] << endl;
-        optimizer.addEdge( edge );
-	//cout << "here" << endl;
-    }
-  //cout << "herehere" << endl;
-    //optimizer.setVerbose ( true );
-    optimizer.initializeOptimization();
-    //cout << "herehere2" << endl;
-    
-    optimizer.optimize(5);
-  //cout << "afg3kk " << endl;
+  g2o::OptimizationAlgorithmLevenberg* solver = new g2o::OptimizationAlgorithmLevenberg(solver_ptr);
+  g2o::SparseOptimizer optimizer;
+  optimizer.setAlgorithm(solver);
+  
+  g2o::VertexSE3Expmap* pose = new g2o::VertexSE3Expmap();
+  pose->setId(0);
+  pose->setEstimate(g2o::SE3Quat(
+    Tcr_.rotation_matrix(), Tcr_.translation())
+  );
+  optimizer.addVertex(pose);
+  
+  for(int i=0; i<inliers.rows; ++i) {
+      int index = inliers.at<int>(i,0);
+      EdgeProjectXYZ2UVPoseOnly* edge = new EdgeProjectXYZ2UVPoseOnly();
+      edge->setId(i); edge->setVertex(0, pose);//pose again
+      edge->camera_ = curr_->camera_.get();
+      
+      edge->point_ = Vector3d(pts3d[index].x, pts3d[index].y, pts3d[index].z);
+      edge->setMeasurement(Vector2d(pts2d[index].x, pts2d[index].y));
+      edge->setInformation(Eigen::Matrix2d::Identity());
+      optimizer.addEdge(edge);
+  }
+  
+  optimizer.initializeOptimization();
+  optimizer.optimize(10);
+  
   Tcr_ = SE3 (
     pose->estimate().rotation(),
     pose->estimate().translation()
@@ -221,7 +204,10 @@ bool VO::addFrame(Frame::Ptr frame)
      state_ = OK;
      curr_ = ref_ = frame;
      extractKAD();
-     updateRef();
+     //updateRef();
+     addMapPoints(1);
+     addKeyFrame();
+
      break;
     }
     case OK: {
@@ -235,9 +221,12 @@ bool VO::addFrame(Frame::Ptr frame)
      
      if (checkgoodPose()) {
        curr_->Tcw_ = Tcr_ * ref_->Tcw_;
-       ref_ = curr_;
-       updateRef();
+       updateMap(); // addpoints() in this function
+       //ref_ = curr_;
+       //updateRef();
        num_lost_ = 0;
+       
+       if (checkKeyFrame())  addKeyFrame(); //cache the features & descripters in this frame
        
      } else {
 	++num_lost_;
@@ -259,5 +248,107 @@ bool VO::addFrame(Frame::Ptr frame)
   }
 }
 
+
+void VO::addKeyFrame() {
+  //TODO:
+  map_->insertKeyFrame(curr_);
+  ref_ = curr_;//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   Correct?
+}
+
+bool VO::checkKeyFrame()
+{
+  SE3 Trc = ref_->Tcw_.inverse();
+  Sophus::Vector6d d = Trc.log();
+  Vector3d trans = d.head<3>();
+  Vector3d rot = d.tail<3>();
+  if (rot.norm() > Config::get_param("keyframe_rotation") || trans.norm() > Config::get_param("keyframe_translation"))
+    return true;
   
+  return false;
+}
+
+
+void VO::addMapPoints(int init_)
+{
+  //matched_2d, keypoints_curr_
+  //filter those matched, add unmatched
+  bool flag = true;
+  vector<bool> matched(keypoints_curr_.size(), false);
+    if (init_ == 1) flag = false;
+    else 
+      for ( int index: matched_2d )
+	  matched[index] = true;
+    for ( int i=0; i<keypoints_curr_.size(); i++ )
+    {
+        if (flag && matched[i])   
+            continue;
+	double d = ref_->findDepth(keypoints_curr_[i]); //ref_ not curr_->?????
+	if (d < 0)
+	  continue;
+	Vector3d pw = ref_->camera_->p2w(
+	    Vector2d ( keypoints_curr_[i].pt.x, keypoints_curr_[i].pt.y ), 
+	    curr_->Tcw_, d);
+	Vector3d n = pw - ref_->getCamCenter();
+	n.normalize();
+	MapPoint::Ptr map_pt = MapPoint::createMapPoint(
+	  pw, n, desc_curr_.row(i).clone(), curr_.get()//raw pointer to frame!!!!
+	);
+	
+	map_->insertMapPoint(map_pt);
+    }
+}
+
+
+void VO::updateMap()
+{
+  //addMapPoints();
+
+  // remove the hardly seen and no visible points 
+    for ( auto iter = map_->map_points_.begin(); iter != map_->map_points_.end(); )
+    {
+        if ( !curr_->isInFrame(iter->second->pos_) )
+        {
+            iter = map_->map_points_.erase(iter);
+            continue;
+        }
+        float match_ratio = float(iter->second->matched_times_)/iter->second->visible_times_;
+        if ( match_ratio < map_point_erase_ratio_ )
+        {
+            iter = map_->map_points_.erase(iter);
+            continue;
+        }
+        
+        double angle = getViewAngle( curr_, iter->second );
+        if ( angle > M_PI/6. )
+        {
+            iter = map_->map_points_.erase(iter);
+            continue;
+        }
+        //if ( iter->second->good_ == false )
+        //{
+            // TODO try triangulate this map point 
+        //}
+        iter++;
+    }
+    
+    if ( matched_2d.size()<100 )
+        addMapPoints();
+    if ( map_->map_points_.size() > 1000 )  
+    {
+        // TODO map is too large, remove some one 
+        map_point_erase_ratio_ += 0.05;
+    }
+    else 
+        map_point_erase_ratio_ = 0.1;
+    cout<<"map points: "<<map_->map_points_.size()<<endl;
+}
+
+double VO::getViewAngle ( Frame::Ptr frame, MapPoint::Ptr point )
+{
+    Vector3d n = point->pos_ - frame->getCamCenter();
+    n.normalize();
+    return acos( n.transpose()*point->norm_ );
+}
+
+
 }

@@ -70,11 +70,27 @@ g2o/core/robust_kernel.h
 g2o/core/robust_kernel_impl.h
 -
 
+../include/betaslam/map.h
+betaslam/common_include.h
+../include/betaslam/betaslam/common_include.h
+betaslam/frame.h
+../include/betaslam/betaslam/frame.h
+betaslam/mappoint.h
+../include/betaslam/betaslam/mappoint.h
+
+../include/betaslam/mappoint.h
+betaslam/common_include.h
+../include/betaslam/betaslam/common_include.h
+
 ../include/betaslam/vo.h
 betaslam/common_include.h
 ../include/betaslam/betaslam/common_include.h
 betaslam/frame.h
 ../include/betaslam/betaslam/frame.h
+betaslam/map.h
+../include/betaslam/betaslam/map.h
+betaslam/config.h
+../include/betaslam/betaslam/config.h
 opencv2/features2d/features2d.hpp
 -
 
@@ -108,6 +124,12 @@ betaslam/frame.h
 betaslam/g2o_types.h
 /home/winter/Desktop/slam/slambook-master/project/newslam/src/betaslam/g2o_types.h
 
+/home/winter/Desktop/slam/slambook-master/project/newslam/src/mappoint.cpp
+betaslam/mappoint.h
+/home/winter/Desktop/slam/slambook-master/project/newslam/src/betaslam/mappoint.h
+betaslam/common_include.h
+/home/winter/Desktop/slam/slambook-master/project/newslam/src/betaslam/common_include.h
+
 /home/winter/Desktop/slam/slambook-master/project/newslam/src/vo.cpp
 betaslam/vo.h
 /home/winter/Desktop/slam/slambook-master/project/newslam/src/betaslam/vo.h
@@ -122,6 +144,8 @@ opencv2/imgproc/imgproc.hpp
 opencv2/calib3d/calib3d.hpp
 -
 g2o/core/sparse_optimizer.h
+-
+boost/timer.hpp
 -
 
 /usr/include/eigen3/Eigen/Cholesky

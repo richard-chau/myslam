@@ -48,11 +48,27 @@ betaslam/common_include.h
 betaslam/camera.h
 ../include/betaslam/betaslam/camera.h
 
+../include/betaslam/map.h
+betaslam/common_include.h
+../include/betaslam/betaslam/common_include.h
+betaslam/frame.h
+../include/betaslam/betaslam/frame.h
+betaslam/mappoint.h
+../include/betaslam/betaslam/mappoint.h
+
+../include/betaslam/mappoint.h
+betaslam/common_include.h
+../include/betaslam/betaslam/common_include.h
+
 ../include/betaslam/vo.h
 betaslam/common_include.h
 ../include/betaslam/betaslam/common_include.h
 betaslam/frame.h
 ../include/betaslam/betaslam/frame.h
+betaslam/map.h
+../include/betaslam/betaslam/map.h
+betaslam/config.h
+../include/betaslam/betaslam/config.h
 opencv2/features2d/features2d.hpp
 -
 
