@@ -50,9 +50,10 @@ int main(int argc, char **argv) {
     
      // visualization
     cv::viz::Viz3d vis("Visual Odometry");
-    cv::viz::WCoordinateSystem world_coor(1.0), camera_coor(0.5);
-    cv::Point3d cam_pos( 0, -1.0, -1.0 ), cam_focal_point(0,0,0), cam_y_dir(0,1,0);
+    cv::viz::WCoordinateSystem world_coor(1.0), camera_coor(0.3);
+    cv::Point3d cam_pos( 0, -1.0, -0.5 ), cam_focal_point(0,0,0), cam_y_dir(0,1,0);
     cv::Affine3d cam_pose = cv::viz::makeCameraPose( cam_pos, cam_focal_point, cam_y_dir );
+    
     vis.setViewerPose( cam_pose );
     
     world_coor.setRenderingProperty(cv::viz::LINE_WIDTH, 2.0);
@@ -75,20 +76,22 @@ int main(int argc, char **argv) {
 	
 	if ( vo->state_ == betaslam::VO::LOST )
             break;
-        SE3 Tcw = pFrame->Tcw_.inverse();
+	
+	
+	
+        SE3 Twc = pFrame->Tcw_.inverse();
         
         // show the map and the camera pose 
         cv::Affine3d M(
             cv::Affine3d::Mat3( 
-                Tcw.rotation_matrix()(0,0), Tcw.rotation_matrix()(0,1), Tcw.rotation_matrix()(0,2),
-                Tcw.rotation_matrix()(1,0), Tcw.rotation_matrix()(1,1), Tcw.rotation_matrix()(1,2),
-                Tcw.rotation_matrix()(2,0), Tcw.rotation_matrix()(2,1), Tcw.rotation_matrix()(2,2)
+                Twc.rotation_matrix()(0,0), Twc.rotation_matrix()(0,1), Twc.rotation_matrix()(0,2),
+                Twc.rotation_matrix()(1,0), Twc.rotation_matrix()(1,1), Twc.rotation_matrix()(1,2),
+                Twc.rotation_matrix()(2,0), Twc.rotation_matrix()(2,1), Twc.rotation_matrix()(2,2)
             ), 
             cv::Affine3d::Vec3(
-                Tcw.translation()(0,0), Tcw.translation()(1,0), Tcw.translation()(2,0)
+                Twc.translation()(0,0), Twc.translation()(1,0), Twc.translation()(2,0)
             )
         );
-        
         cv::imshow("image", color );
         cv::waitKey(1);
         vis.setWidgetPose( "Camera", M);
@@ -98,7 +101,7 @@ int main(int argc, char **argv) {
 	//cv::namedWindow("Display Image", cv::WINDOW_AUTOSIZE );
 	//cv::imshow("Display Image", color);
 	//cv::waitKey(0);
-	if (i == 2) break;
+	//if (i == 2) break;
     }
     
     

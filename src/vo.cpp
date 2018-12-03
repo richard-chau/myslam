@@ -28,10 +28,12 @@ void VO::featureMatching()
 {
   
   vector<cv::DMatch> matches;
-  cv::BFMatcher matcher(cv::NORM_HAMMING);
+  //cv::BFMatcher matcher(cv::NORM_HAMMING);
+  cv::FlannBasedMatcher matcher( new cv::flann::LshIndexParams(5,10,2));
+  
   //matcher.match(desc_curr_, desc_ref_, matches);
   matcher.match(desc_ref_, desc_curr_, matches);
-  cout << Config::get_param("match_ratio")<<" " <<matches.size() <<endl;
+  //cout << Config::get_param("match_ratio")<<" " <<matches.size() <<endl;
   float min_dis = std::min_element(matches.begin(), matches.end(),
 				   [](const cv::DMatch& m1, const cv::DMatch& m2){
     return m1.distance < m2.distance;
