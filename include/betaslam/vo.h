@@ -26,7 +26,7 @@ public:
   vector<cv::Point3f> pts_3d_ref_;
   int num_inliers_;
   int num_lost_; 
-  SE3 Tcr_;
+  SE3 Tcw_;
   
   double map_point_erase_ratio_;
   
@@ -58,7 +58,7 @@ protected:
   void addKeyFrame();
   bool checkKeyFrame();
   void updateMap();
-  void addMapPoints(int init_=0);
+  void addMapPoints();
   double getViewAngle( Frame::Ptr frame, MapPoint::Ptr point );
   
 };

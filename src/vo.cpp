@@ -113,7 +113,7 @@ void VO::PosePnP()
   cv::solvePnPRansac(pts3d, pts2d, K, Mat(), rvec, tvec, false, 100, 4.0, 0.99, inliers);
   num_inliers_ = inliers.rows;
   cout << "pnp inliers" << num_inliers_ << endl;
-  Tcr_ = SE3(SO3(rvec.at<double>(0, 0), rvec.at<double>(1, 0), rvec.at<double>(2, 0)),
+  Tcw_ = SE3(SO3(rvec.at<double>(0, 0), rvec.at<double>(1, 0), rvec.at<double>(2, 0)),
 	     Vector3d(tvec.at<double>(0, 0), tvec.at<double>(1, 0), tvec.at<double>(2, 0))
 	 );
   
@@ -129,7 +129,7 @@ void VO::PosePnP()
   g2o::VertexSE3Expmap* pose = new g2o::VertexSE3Expmap();
   pose->setId(0);
   pose->setEstimate(g2o::SE3Quat(
-    Tcr_.rotation_matrix(), Tcr_.translation())
+    Tcw_.rotation_matrix(), Tcw_.translation())
   );
   optimizer.addVertex(pose);
   
@@ -143,12 +143,14 @@ void VO::PosePnP()
       edge->setMeasurement(Vector2d(pts2d[index].x, pts2d[index].y));
       edge->setInformation(Eigen::Matrix2d::Identity());
       optimizer.addEdge(edge);
+      
+      matched_inmap[index]->matched_times_++;/////!!!!!!!!!!!!!!
   }
   
   optimizer.initializeOptimization();
   optimizer.optimize(10);
   
-  Tcr_ = SE3 (
+  Tcw_ = SE3 (
     pose->estimate().rotation(),
     pose->estimate().translation()
   );
@@ -185,7 +187,7 @@ bool VO::checkgoodPose()
         return false;
     }
     // if the motion is too large, it is probably wrong
-    Sophus::Vector6d d = Tcr_.log();
+    Sophus::Vector6d d = (ref_->Tcw_ * Tcw_.inverse()).log();//version 0.2: Tcr_.log();
     if ( d.norm() > 5.0 )
     {
         cout<<"reject because motion is too large: "<<d.norm()<<endl;
@@ -205,7 +207,7 @@ bool VO::addFrame(Frame::Ptr frame)
      curr_ = ref_ = frame;
      extractKAD();
      //updateRef();
-     addMapPoints(1);
+     //addMapPoints(1);
      addKeyFrame();
 
      break;
@@ -213,6 +215,7 @@ bool VO::addFrame(Frame::Ptr frame)
     case OK: {
       
      curr_ = frame;
+     curr_->Tcw_ = ref_->Tcw_;
      extractKAD();
     
      featureMatching();
@@ -220,7 +223,8 @@ bool VO::addFrame(Frame::Ptr frame)
      PosePnP();
      
      if (checkgoodPose()) {
-       curr_->Tcw_ = Tcr_ * ref_->Tcw_;
+       //curr_->Tcw_ = Tcr_ * ref_->Tcw_;
+       curr_->Tcw_ = Tcw_;
        updateMap(); // addpoints() in this function
        //ref_ = curr_;
        //updateRef();
@@ -249,15 +253,37 @@ bool VO::addFrame(Frame::Ptr frame)
 }
 
 
+
 void VO::addKeyFrame() {
   //TODO:
+  if (map_->keyframes_.empty()) {
+    for ( int i=0; i<keypoints_curr_.size(); i++ )
+    {
+	double d = ref_->findDepth(keypoints_curr_[i]); //ref_ not curr_->?????
+	if (d < 0)
+	  continue;
+	Vector3d pw = ref_->camera_->p2w(
+	    Vector2d ( keypoints_curr_[i].pt.x, keypoints_curr_[i].pt.y ), 
+	    curr_->Tcw_, d);
+	Vector3d n = pw - ref_->getCamCenter();
+	n.normalize();
+	MapPoint::Ptr map_pt = MapPoint::createMapPoint(
+	  pw, n, desc_curr_.row(i).clone(), curr_.get()//raw pointer to frame!!!!
+	);
+	
+	map_->insertMapPoint(map_pt);
+    }
+    
+  }
+  
   map_->insertKeyFrame(curr_);
   ref_ = curr_;//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   Correct?
 }
 
 bool VO::checkKeyFrame()
 {
-  SE3 Trc = ref_->Tcw_.inverse();
+  //SE3 Trc = ref_->Tcw_.inverse(); //different from 0.2
+  SE3 Trc = ref_->Tcw_ * Tcw_.inverse();
   Sophus::Vector6d d = Trc.log();
   Vector3d trans = d.head<3>();
   Vector3d rot = d.tail<3>();
@@ -268,19 +294,18 @@ bool VO::checkKeyFrame()
 }
 
 
-void VO::addMapPoints(int init_)
+void VO::addMapPoints() //init_=0 in declaration
 {
   //matched_2d, keypoints_curr_
   //filter those matched, add unmatched
-  bool flag = true;
+  
   vector<bool> matched(keypoints_curr_.size(), false);
-    if (init_ == 1) flag = false;
-    else 
-      for ( int index: matched_2d )
+  
+   for ( int index: matched_2d )
 	  matched[index] = true;
     for ( int i=0; i<keypoints_curr_.size(); i++ )
     {
-        if (flag && matched[i])   
+        if ( matched[i])   
             continue;
 	double d = ref_->findDepth(keypoints_curr_[i]); //ref_ not curr_->?????
 	if (d < 0)
@@ -302,28 +327,31 @@ void VO::addMapPoints(int init_)
 void VO::updateMap()
 {
   //addMapPoints();
-
+  cout<<"map points:start "<<map_->map_points_.size()<<endl;
   // remove the hardly seen and no visible points 
     for ( auto iter = map_->map_points_.begin(); iter != map_->map_points_.end(); )
     {
+	//cout<<"map points: llll"<<map_->map_points_.size()<<endl;
         if ( !curr_->isInFrame(iter->second->pos_) )
         {
             iter = map_->map_points_.erase(iter);
             continue;
         }
+        //cout<<"map points: "<<map_->map_points_.size()<<endl;
         float match_ratio = float(iter->second->matched_times_)/iter->second->visible_times_;
         if ( match_ratio < map_point_erase_ratio_ )
         {
             iter = map_->map_points_.erase(iter);
             continue;
         }
-        
+        //cout<<"map points: "<<map_->map_points_.size()<<endl;
         double angle = getViewAngle( curr_, iter->second );
         if ( angle > M_PI/6. )
         {
             iter = map_->map_points_.erase(iter);
             continue;
         }
+        //cout<<"map points: "<<map_->map_points_.size()<<endl;
         //if ( iter->second->good_ == false )
         //{
             // TODO try triangulate this map point 

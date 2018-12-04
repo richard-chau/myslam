@@ -6,6 +6,8 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/viz.hpp> 
 
+#include <opencv2/imgproc/imgproc.hpp> // add in version 0.3
+
 #include "betaslam/config.h"
 #include "betaslam/vo.h"
 #include "betaslam/frame.h"
@@ -92,7 +94,14 @@ int main(int argc, char **argv) {
                 Twc.translation()(0,0), Twc.translation()(1,0), Twc.translation()(2,0)
             )
         );
-        cv::imshow("image", color );
+	
+	Mat img_show = color.clone();
+	for(auto &pt: vo->map_->map_points_) {
+	    Vector2d pixel = pFrame->camera_->w2p(pt.second->pos_, pFrame->Tcw_);
+	    cv::circle(img_show, cv::Point2f(pixel(0,0), pixel(1,0)), 3, cv::Scalar(0,0,255), 2);
+	}
+	
+        cv::imshow("image", img_show);//color );
         cv::waitKey(1);
         vis.setWidgetPose( "Camera", M);
         vis.spinOnce(1, false);

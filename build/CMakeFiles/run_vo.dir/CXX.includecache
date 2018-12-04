@@ -97,6 +97,8 @@ opencv2/highgui/highgui.hpp
 -
 opencv2/viz.hpp
 -
+opencv2/imgproc/imgproc.hpp
+-
 betaslam/config.h
 /home/winter/Desktop/slam/slambook-master/project/newslam/betaslam/config.h
 betaslam/vo.h
@@ -1795,6 +1797,10 @@ opencv2/highgui.hpp
 /usr/local/include/opencv2/opencv2/highgui.hpp
 opencv2/imgproc/imgproc_c.h
 /usr/local/include/opencv2/opencv2/imgproc/imgproc_c.h
+
+/usr/local/include/opencv2/imgproc/imgproc.hpp
+opencv2/imgproc.hpp
+/usr/local/include/opencv2/imgproc/opencv2/imgproc.hpp
 
 /usr/local/include/opencv2/imgproc/imgproc_c.h
 opencv2/imgproc/types_c.h
