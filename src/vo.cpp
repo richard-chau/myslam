@@ -156,26 +156,26 @@ void VO::PosePnP()
   );
 }
 
-void VO::updateRef()
-{
-  //pts_3d_ref_
-  //desc_ref_
-  pts_3d_ref_.clear(); //vector
-  desc_ref_ = Mat(); //Mat()
-  //cout << keypoints_curr_.size() << "fsad " << endl;
-  for(int i=0; i<keypoints_curr_.size(); ++i) {
-      double d = ref_->findDepth(keypoints_curr_[i]);
-      if (d > 0) {
-	Vector3d p_cam = ref_->camera_->p2c(
-	  Vector2d(keypoints_curr_[i].pt.x, keypoints_curr_[i].pt.y), d);
-	pts_3d_ref_.push_back(cv::Point3f(p_cam(0, 0), p_cam(1, 0), p_cam(2, 0)));
-	desc_ref_.push_back(desc_curr_.row(i));
-	//cout << desc_curr_.row(i) << endl;;
-	//cout << p_cam << endl;
-	
-      }
-  }
-}
+// void VO::updateRef()
+// {
+//   //pts_3d_ref_
+//   //desc_ref_
+//   pts_3d_ref_.clear(); //vector
+//   desc_ref_ = Mat(); //Mat()
+//   //cout << keypoints_curr_.size() << "fsad " << endl;
+//   for(int i=0; i<keypoints_curr_.size(); ++i) {
+//       double d = ref_->findDepth(keypoints_curr_[i]);
+//       if (d > 0) {
+// 	Vector3d p_cam = ref_->camera_->p2c(
+// 	  Vector2d(keypoints_curr_[i].pt.x, keypoints_curr_[i].pt.y), d);
+// 	pts_3d_ref_.push_back(cv::Point3f(p_cam(0, 0), p_cam(1, 0), p_cam(2, 0)));
+// 	desc_ref_.push_back(desc_curr_.row(i));
+// 	//cout << desc_curr_.row(i) << endl;;
+// 	//cout << p_cam << endl;
+// 	
+//       }
+//   }
+// }
 
 
 bool VO::checkgoodPose()
@@ -187,7 +187,7 @@ bool VO::checkgoodPose()
         return false;
     }
     // if the motion is too large, it is probably wrong
-    Sophus::Vector6d d = (ref_->Tcw_ * Tcw_.inverse()).log();//version 0.2: Tcr_.log();
+    Sophus::Vector6d d = (ref_->Tcw_ * Tcw_.inverse()).log();// Trc //version 0.2: Tcr_.log();
     if ( d.norm() > 5.0 )
     {
         cout<<"reject because motion is too large: "<<d.norm()<<endl;
@@ -215,18 +215,18 @@ bool VO::addFrame(Frame::Ptr frame)
     case OK: {
       
      curr_ = frame;
-     curr_->Tcw_ = ref_->Tcw_;
+     curr_->Tcw_ = ref_->Tcw_;// different from 0.2!!
      extractKAD();
     
      featureMatching();
      
      PosePnP();
      
-     if (checkgoodPose()) {
+     if (checkgoodPose()) { //If Tcw_ is good, then assign it to curr_
        //curr_->Tcw_ = Tcr_ * ref_->Tcw_;
        curr_->Tcw_ = Tcw_;
        updateMap(); // addpoints() in this function
-       //ref_ = curr_;
+       //ref_ = curr_; // only occurs in addKeyFrame() and INITIALIZING
        //updateRef();
        num_lost_ = 0;
        
@@ -308,6 +308,8 @@ void VO::addMapPoints() //init_=0 in declaration
         if ( matched[i])   
             continue;
 	double d = ref_->findDepth(keypoints_curr_[i]); //ref_ not curr_->?????
+	//here keypoints are pixel indices produced by orb_. 
+	//d may be refined by triangulation.
 	if (d < 0)
 	  continue;
 	Vector3d pw = ref_->camera_->p2w(

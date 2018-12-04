@@ -52,7 +52,7 @@ protected:
   void extractKAD(); //keypoint and descriptors
   void featureMatching();
   void PosePnP();
-  void updateRef();
+//void updateRef();
   bool checkgoodPose();
   
   void addKeyFrame();
