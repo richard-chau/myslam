@@ -64,7 +64,7 @@ public:
     float grayscale;
   };
   bool addFrame_ds(Frame::Ptr frame); //semidense
-  std::vector<Measurement> measurements;
+  std::list<Measurement> measurements;
   
   
   static int methods;
@@ -84,6 +84,9 @@ protected:
   
   void extractInitPt();
   void PoseDirect();
+  void updateMap_ds();
+  bool checkKeyFrame_ds();
+  void addKeyFrame_ds();
   
 };
 }

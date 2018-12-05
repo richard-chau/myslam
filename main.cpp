@@ -83,6 +83,7 @@ int main(int argc, char **argv) {
 	pFrame->gray_ = gray;
 	
 	boost::timer timer;
+	
 	vo->addFrame(pFrame);
 	
 	cout << "VO time of one frame" << timer.elapsed() << endl;
@@ -122,8 +123,8 @@ int main(int argc, char **argv) {
 	//cv::imshow("Display Image", color);
 	//cv::waitKey(0);
 	//if (i == 3) break;
-	cout << vo->curr_->Tcw_ << " " << vo->ref_->Tcw_ << endl;
-	cout << pFrame->Tcw_ << endl;
+	//cout << vo->curr_->Tcw_ << " " << vo->ref_->Tcw_ << endl;
+	//cout << pFrame->Tcw_ << endl;
     }
     
     

@@ -29,8 +29,8 @@ public:
       observed_frames_.push_back(frame);
     }
 
-  MapPoint(long int id, const Vector3d& pos, const Vector3d& norm, Frame *frame=nullptr, float grayscale=0)
-    :id_(id), pos_(pos), norm_(norm), good_(true), visible_times_(1), matched_times_(1), grayscale_(grayscale) {
+  MapPoint(long int id, const Vector3d& pos, const Vector3d& norm, Frame *frame=nullptr, float grayscale=0, const Mat& desc=Mat())
+    :id_(id), pos_(pos), norm_(norm), good_(true), visible_times_(1), matched_times_(1), grayscale_(grayscale), desc_(desc) {
       desc_ = Mat();
       observed_frames_.push_back(frame);
     }

@@ -257,10 +257,12 @@ bool VO::addFrame(Frame::Ptr frame)
 
 
 void VO::addKeyFrame() {
-  //TODO:
+  
+  
   if (map_->keyframes_.empty()) {
     for ( int i=0; i<keypoints_curr_.size(); i++ )
     {
+      //cout << i << "debug" << endl;
 	double d = ref_->findDepth(keypoints_curr_[i]); //ref_ not curr_->?????
 	if (d < 0)
 	  continue;
@@ -270,25 +272,17 @@ void VO::addKeyFrame() {
 	Vector3d n = pw - ref_->getCamCenter();
 	n.normalize();
 	MapPoint::Ptr map_pt;
-	if (VO::methods == 0) {
-	  map_pt = MapPoint::createMapPoint(
+	
+	 map_pt = MapPoint::createMapPoint(
 	    pw, n, desc_curr_.row(i).clone(), curr_.get()//raw pointer to frame!!!!
 	  );
-	} else {
-	  int y = keypoints_curr_[i].pt.y;
-	  int x = keypoints_curr_[i].pt.x;
-	  float grayscale = curr_->gray_.ptr<ushort>(y)[x];
-	  map_pt = MapPoint::createMapPointWithGrayScale(
-	    pw, n, grayscale, curr_.get()//raw pointer to frame!!!!
-	  );
-	}
+	
 	map_->insertMapPoint(map_pt);
     }
-    
   }
   
   map_->insertKeyFrame(curr_);
-  
+  cout << "add one frame" << endl;
   ref_ = curr_;//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   Correct?
 }
 
@@ -301,6 +295,7 @@ bool VO::checkKeyFrame()
   Vector3d rot = d.tail<3>();
   cout <<"check keyframe: norm of t and r"<< trans.norm() << " " << rot.norm() << endl;
   //return true;
+  
   if (rot.norm() > Config::get_param("keyframe_rotation") || trans.norm() > Config::get_param("keyframe_translation"))
     return true;
   
@@ -337,14 +332,14 @@ void VO::addMapPoints() //init_=0 in declaration
 	  map_pt = MapPoint::createMapPoint(
 	    pw, n, desc_curr_.row(i).clone(), curr_.get()//raw pointer to frame!!!!
 	  );
-	} else {
+	}/* else {
 	  int y = keypoints_curr_[i].pt.y;
 	  int x = keypoints_curr_[i].pt.x;
 	  float grayscale = curr_->gray_.ptr<ushort>(y)[x];
 	  map_pt = MapPoint::createMapPointWithGrayScale(
 	    pw, n, grayscale, curr_.get()//raw pointer to frame!!!!
 	  );
-	}
+	}*/
 	
 	map_->insertMapPoint(map_pt);
     }
@@ -354,7 +349,7 @@ void VO::addMapPoints() //init_=0 in declaration
 void VO::updateMap()
 {
   //addMapPoints();
-  cout<<"map points:start "<<map_->map_points_.size()<<endl;
+  //cout<<"map points:start "<<map_->map_points_.size()<<endl;
   // remove the hardly seen and no visible points 
     for ( auto iter = map_->map_points_.begin(); iter != map_->map_points_.end(); )
     {
@@ -388,16 +383,16 @@ void VO::updateMap()
         iter++;
     }
     
-//     if ( matched_2d.size()<100 )
-//         addMapPoints();
-//     if ( map_->map_points_.size() > 1000 )  
-//     {
-//         // TODO map is too large, remove some one 
-//         map_point_erase_ratio_ += 0.05;
-//     }
-//     else 
-//         map_point_erase_ratio_ = 0.1;
-//     cout<<"map points: "<<map_->map_points_.size()<<endl;
+    if ( matched_2d.size()<100 )
+        addMapPoints();
+    if ( map_->map_points_.size() > 1000 )  
+    {
+        // TODO map is too large, remove some one 
+        map_point_erase_ratio_ += 0.05;
+    }
+    else 
+        map_point_erase_ratio_ = 0.1;
+    cout<<"map points: "<<map_->map_points_.size()<<endl;
 }
 
 double VO::getViewAngle ( Frame::Ptr frame, MapPoint::Ptr point )
@@ -409,12 +404,65 @@ double VO::getViewAngle ( Frame::Ptr frame, MapPoint::Ptr point )
 
 
 
+void VO::addKeyFrame_ds() {
+  //TODO:
+  
+  static int cnt = 0;
+  
+  
+  if (map_->map_points_.empty() == false) //must do this!!
+    map_->map_points_.clear();
+  //map_.reset();
+  
+  extractInitPt();
+  
+  //cout <<  float(curr_->gray_.ptr<uchar> (36) [35]) << "sfa df" << endl;
+
+  for ( int i=0; i<keypoints_curr_.size(); i++ )
+  {
+      double d = ref_->findDepth(keypoints_curr_[i]); //ref_ not curr_->?????
+      //cout << i << " " << d << " debug" << ref_->depth_.rows <<" "<<ref_->depth_.cols<< endl;  
+      //cout << keypoints_curr_[i].pt.x << keypoints_curr_[i].pt.y  <<double(curr_->gray_.ptr<uchar>(36)[35])<< endl;
+      if (d < 0)
+	continue;
+      Vector3d pw = ref_->camera_->p2w(
+	  Vector2d ( keypoints_curr_[i].pt.x, keypoints_curr_[i].pt.y ), 
+	  curr_->Tcw_, d);
+      Vector3d n = pw - ref_->getCamCenter();
+      n.normalize();
+      
+      
+      //cout << i << "debug" << double(curr_->gray_.ptr<uchar>(35)[36]) << endl;
+      int y = keypoints_curr_[i].pt.y;
+      int x = keypoints_curr_[i].pt.x;
+      
+      float grayscale = double(curr_->gray_.ptr<uchar>(y)[x]);
+      //cout << keypoints_curr_[i].pt.x << keypoints_curr_[i].pt.y  <<double(curr_->gray_.ptr<uchar>(y)[x]) << endl;
+      //cout << "grayscale" << grayscale << endl;
+      MapPoint::Ptr map_pt = MapPoint::createMapPointWithGrayScale(
+	pw, n, grayscale, curr_.get()//raw pointer to frame!!!!
+      );
+      //cout << i << "debug" << y <<" " << x << " " << n << " " << grayscale << endl;
+      
+      map_->insertMapPoint(map_pt);
+      //cout << i << "debug" << endl;
+  }
+  cout << "new map:" << ++cnt << " " <<  map_->map_points_.size() << endl;
+ 
+  
+  map_->insertKeyFrame(curr_);
+  cout << "add one frame" << endl;
+  ref_ = curr_;//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   Correct?
+}
+
 void VO::extractInitPt()
 {
   cv::Mat gray = curr_->gray_;
   //cv::cvtColor(curr_->color_, gray, cv::COLOR_BGR2GRAY);
   //curr_->gray_ = gray;
-  
+  cout << "init map" << endl;
+  keypoints_curr_.clear();
+  //measurements.clear();
   for(int y=10; y<gray.rows-10; ++y){
     for(int x=10; x<gray.cols - 10; ++x) 
        {
@@ -428,6 +476,7 @@ void VO::extractInitPt()
 	
  	double d = double(curr_->depth_.ptr<ushort>(y)[x]) / curr_->camera_->depth_scale_;
 	//just like Frame::findDepth(cv::KeyPoint) but depth must exist here
+	//cout << d << endl;
 	if (d == 0) 
 	  continue;
 	
@@ -435,19 +484,14 @@ void VO::extractInitPt()
 	
 	Vector3d p3d = curr_->camera_->p2c(Vector2d(x, y), d);
 	float grayscale = float ( gray.ptr<uchar> (y) [x] );
-	measurements.push_back(Measurement(p3d, grayscale));
+	//measurements.push_back(Measurement(p3d, grayscale));
 	
       }
+      
   }
-  
-  cout << "keypoint size:" <<  keypoints_curr_.size() << endl;
-}
-
-
-void VO::PoseDirect()
-{
-  
-//   measurements.clear();
+  //cout <<  float ( gray.ptr<uchar> (36) [35] ) << endl;
+  //cout <<  float(gray.ptr<uchar> (36) [35]) << "sfa df" << endl;
+  //   measurements.clear();
 //   for(auto &item : map_->map_points_) {
 //       MapPoint::Ptr p = item.second;
 //       if (curr_->isInFrame(p->pos_)){
@@ -456,6 +500,65 @@ void VO::PoseDirect()
 // 	  measurements.push_back(Measurement(c_tmp, p->grayscale_));
 //       } //else ?? TODO
 //   }
+  
+  cout << "keypoint size:" <<  keypoints_curr_.size() << endl;
+}
+
+
+void VO::PoseDirect()
+{
+  
+//   for (auto ptr=measurements.begin(); ptr!=measurements.end(); ++ptr) {
+//   //for(auto &item : map_->map_points_) {
+//     //MapPoint::Ptr p = item.second;
+//       MapPoint::Ptr p = *ptr;
+//       if (curr_->isInFrame(p->pos_)){
+// 	  p->visible_times_ += 1;
+//       } else {
+// 	map_->map_points_.erase(p);
+// 	measurements.erase(p);
+//       }
+//   }
+  
+  measurements.clear();
+//   for ( auto iter = map_->map_points_.begin(); iter != map_->map_points_.end(); )
+//     {
+// 	MapPoint::Ptr p = iter->second;
+// 	if (curr_->isInFrame(p->pos_)){
+//  	  p->visible_times_ += 1;
+// 	  //Vector3d p3d = curr_->camera_->p2c(Vector2d(x, y), d);
+// 	//float grayscale = float ( gray.ptr<uchar> (y) [x] );
+// 	  measurements.emplace_back(ref_->camera_->w2c(p->pos_, ref_->Tcw_) ,p->grayscale_);
+//        } else {
+//             iter = map_->map_points_.erase(iter);
+//             continue;
+//         }
+//     }
+  
+  
+  std::vector<int> tobedeleted;
+  for(auto &item : map_->map_points_) {
+     MapPoint::Ptr p = item.second;
+     if (curr_->isInFrame(p->pos_)){
+ 	  p->visible_times_ += 1;
+	  //Vector3d p3d = curr_->camera_->p2c(Vector2d(x, y), d);
+	//float grayscale = float ( gray.ptr<uchar> (y) [x] );
+	  measurements.emplace_back(ref_->camera_->w2c(p->pos_, ref_->Tcw_) ,p->grayscale_);
+       } else {
+	 //cout << "3 4" <<endl;
+	//map_->map_points_.erase(item.first);
+	 tobedeleted.push_back(item.first);
+     }
+  }
+  for(int i: tobedeleted) {
+      map_->map_points_.erase(i);
+  }
+  
+  //cout << measurements.size() << endl;
+  if (measurements.size() < Config::get_param("min_ds_map_cnt")) {
+      addKeyFrame_ds();
+  }
+  
   
     //Mat K = ( cv::Mat_<double>(3,3) << ref_->camera_->fx_, 0, ref_->camera_->cx_, 
 	//    0, ref_->camera_->fy_,  ref_->camera_->cy_, 0, 0, 1 );
@@ -505,11 +608,68 @@ void VO::PoseDirect()
     pose->estimate().rotation(),
     pose->estimate().translation()
   );
-    cout << "pose es:" << Tcw_ << " " << pose->estimate().rotation().toRotationMatrix() << endl;
+    //cout << "pose es:" << Tcw_ << " " << pose->estimate().rotation().toRotationMatrix() << endl;
     //Tcw_ = Tcw_ * ref_->Tcw_;
 }
 
 
+void VO::updateMap_ds()
+{
+  //TODO:
+  //add new points into the map. How to differentiate these points, and maintain the size
+  cv::Mat gray = curr_->gray_;
+  
+  for(int y=10; y<gray.rows-10; ++y){
+    for(int x=10; x<gray.cols - 10; ++x) 
+       {
+	Vector2d delta(gray.ptr<uchar>(y)[x+1] - gray.ptr<uchar>(y)[x-1],
+		       gray.ptr<uchar>(y+1)[x] - gray.ptr<uchar>(y-1)[x]
+		 );
+	if (delta.norm() < 50) 
+	  continue;
+	
+	//keypoints_curr_.push_back(cv::KeyPoint(cv::Point2f(x, y), 0)); //size
+	
+ 	double d = double(curr_->depth_.ptr<ushort>(y)[x]) / curr_->camera_->depth_scale_;
+	//just like Frame::findDepth(cv::KeyPoint) but depth must exist here
+	if (d == 0) 
+	  continue;
+	
+	keypoints_curr_.push_back(cv::KeyPoint(cv::Point2f(x, y), 0)); //size
+	
+	Vector3d p3d = curr_->camera_->p2c(Vector2d(x, y), d);
+	float grayscale = float ( gray.ptr<uchar> (y) [x] );
+	//measurements.push_back(Measurement(p3d, grayscale));
+	//use map
+      }
+  }
+  
+  cout<<"map points:"<<map_->map_points_.size()<<endl;
+
+}  
+
+
+bool VO::checkKeyFrame_ds()
+{
+  if (map_->map_points_.size() < Config::get_param("min_ds_map_cnt")) {
+      return true;
+  } 
+  
+  SE3 Trc = ref_->Tcw_ * Tcw_.inverse();
+  Sophus::Vector6d d = Trc.log();
+  Vector3d trans = d.head<3>();
+  Vector3d rot = d.tail<3>();
+  cout <<"check keyframe: norm of t and r"<< trans.norm() << " " << rot.norm() << endl;
+  //return true;
+  
+  if (rot.norm() > Config::get_param("keyframe_rotation") || trans.norm() > Config::get_param("keyframe_translation")) {
+    cout << "Warning: Direct semi-dense has abnormal rotation/translation magnitude. Rebuild the map" << endl;
+    return true;
+  }  
+  return false;
+}
+
+  
 bool VO::addFrame_ds(Frame::Ptr frame)
 {
   static int cnt = 0;
@@ -520,26 +680,15 @@ bool VO::addFrame_ds(Frame::Ptr frame)
      curr_ = ref_ = frame;
      curr_->Tcw_ = Tcw_;
      ref_->Tcw_ = Tcw_;
-     //cv::cvtColor(curr_->color_, curr_->gray_, cv::COLOR_BGR2GRAY);
-     extractInitPt();
-     cout << "b " << endl;
-     //extractKAD();
-     //updateRef();
-     //addMapPoints(1);
-     addKeyFrame();
-     cout << "a " << endl;
-
+     addKeyFrame_ds();
      break;
     }
     case OK: {
      ++cnt; 
       
      curr_ = frame;
-     //cv::cvtColor(curr_->color_, curr_->gray_, cv::COLOR_BGR2GRAY);
-     curr_->Tcw_ = ref_->Tcw_;// different from 0.2!!
-     //extractKAD();
-    
-     //featureMatching();
+     curr_->Tcw_ = ref_->Tcw_;
+     cout<<"map points:"<<map_->map_points_.size()<<endl;
      PoseDirect();
      //PosePnP();
      //curr_->Tcw_ = Tcw_;
@@ -549,12 +698,15 @@ bool VO::addFrame_ds(Frame::Ptr frame)
        cout << "get" << endl;
        //curr_->Tcw_ = Tcr_ * ref_->Tcw_;
        curr_->Tcw_ = Tcw_;
-       //updateMap(); // addpoints() in this function
-       //ref_ = curr_; // only occurs in addKeyFrame() and INITIALIZING
+       //updateMap_ds(); // addpoints() in this function
+       //ref_ = curr_; // wrong!!
        //updateRef();
-       num_lost_ = 0;
+       //num_lost_ = 0;
        
-       if (checkKeyFrame())  addKeyFrame(); //cache the features & descripters in this frame
+       if (checkKeyFrame_ds())  {
+	 addKeyFrame_ds(); //cache the features & descripters in this frame
+	 //ref_ = curr_;
+       }
        
      } else {
 	++num_lost_;
@@ -575,6 +727,8 @@ bool VO::addFrame_ds(Frame::Ptr frame)
     return true;
   }
 }
+
+
 
 
 int betaslam::VO::methods = 0;

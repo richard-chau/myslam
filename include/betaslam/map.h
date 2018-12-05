@@ -26,10 +26,17 @@ public:
   
   
   void insertMapPoint(MapPoint::Ptr map_point){
+    //cout <<( map_points_.find(map_point->id_) == map_points_.end()) << endl;
       if (map_points_.find(map_point->id_) == map_points_.end())
 	map_points_.insert({map_point->id_, map_point});
       else 
 	map_points_[map_point->id_] = map_point;
+  }
+  
+  void reset(){
+    //map_points_ = unordered_map<long, MapPoint::Ptr>();  
+    //map_points_.clear();
+      //keyframes_.clear();
   }
 };
   

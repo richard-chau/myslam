@@ -24,6 +24,8 @@ namespace betaslam {
       config_->kmap["keyframe_translation"] = 0.1; //min_trans
       config_->kmap["min_inliers"] = 30;//10;
       config_->kmap["map_point_erase_ratio"]= 0.1;////0.5;
+      
+      config_->kmap["min_ds_map_cnt"] = 14000; //direct-semidense
     }
   }
 }
