@@ -408,7 +408,7 @@ void VO::addKeyFrame_ds() {
   //TODO:
   
   static int cnt = 0;
-  
+  //Tcw_accu = Tcw_accu * ref_->Tcw_;
   
   if (map_->map_points_.empty() == false) //must do this!!
     map_->map_points_.clear();
@@ -452,6 +452,7 @@ void VO::addKeyFrame_ds() {
   
   map_->insertKeyFrame(curr_);
   cout << "add one frame" << endl;
+  
   ref_ = curr_;//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   Correct?
 }
 
@@ -460,8 +461,18 @@ void VO::extractInitPt()
   cv::Mat gray = curr_->gray_;
   //cv::cvtColor(curr_->color_, gray, cv::COLOR_BGR2GRAY);
   //curr_->gray_ = gray;
+  
+  Tcw_accu = Tcw_accu * Tcw_;
+  
   cout << "init map" << endl;
   keypoints_curr_.clear();
+  Eigen::Isometry3d tmp_tcw = Eigen::Isometry3d::Identity();// [t | R] 
+  Tcw_ = SE3 (
+    tmp_tcw.rotation(),
+    tmp_tcw.translation()
+  );
+  curr_->Tcw_ = Tcw_;
+  ref_->Tcw_ = Tcw_;
   //measurements.clear();
   for(int y=10; y<gray.rows-10; ++y){
     for(int x=10; x<gray.cols - 10; ++x) 
@@ -482,8 +493,8 @@ void VO::extractInitPt()
 	
 	keypoints_curr_.push_back(cv::KeyPoint(cv::Point2f(x, y), 0)); //size
 	
-	Vector3d p3d = curr_->camera_->p2c(Vector2d(x, y), d);
-	float grayscale = float ( gray.ptr<uchar> (y) [x] );
+	//Vector3d p3d = curr_->camera_->p2c(Vector2d(x, y), d);
+	//float grayscale = float ( gray.ptr<uchar> (y) [x] );
 	//measurements.push_back(Measurement(p3d, grayscale));
 	
       }
@@ -706,16 +717,18 @@ bool VO::addFrame_ds(Frame::Ptr frame)
      if (cnt < 2 || checkgoodPose()) { //If Tcw_ is good, then assign it to curr_
        //cout << "get" << endl;
        //curr_->Tcw_ = Tcr_ * ref_->Tcw_;
+      
        curr_->Tcw_ = Tcw_;
+       
        //updateMap_ds(); // addpoints() in this function
        //ref_ = curr_; // wrong!!
        //updateRef();
        //num_lost_ = 0;
        
-       //if (checkKeyFrame_ds())  {
-	// addKeyFrame_ds(); //cache the features & descripters in this frame
+       if (checkKeyFrame_ds())  {
+	 addKeyFrame_ds(); //cache the features & descripters in this frame
 	 //..//ref_ = curr_;
-       //}
+       }
        
      } else {
 	++num_lost_;

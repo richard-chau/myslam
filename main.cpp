@@ -93,7 +93,13 @@ int main(int argc, char **argv) {
 	
 	
 	
-        SE3 Twc = pFrame->Tcw_.inverse();
+	SE3 vis_Tcw_;
+	if (betaslam::VO::methods == 0)
+	  vis_Tcw_ = pFrame->Tcw_;
+	else 
+	  vis_Tcw_ = vo->Tcw_accu * pFrame->Tcw_;
+	  
+	SE3 Twc = vis_Tcw_.inverse();
         
         // show the map and the camera pose 
         cv::Affine3d M(

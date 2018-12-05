@@ -28,6 +28,8 @@ public:
   int num_lost_; 
   SE3 Tcw_;
   
+  SE3 Tcw_accu;
+  
   double map_point_erase_ratio_;
   
   enum VOState {
@@ -53,6 +55,13 @@ public:
 	  tmp_tcw.translation()
 	);
 	
+	Eigen::Isometry3d tmp_tcw1 = Eigen::Isometry3d::Identity();// [t | R] 
+	Tcw_accu = SE3 (
+	  tmp_tcw.rotation(),
+	  tmp_tcw.translation()
+	);
+	
+	
     }
   ~VO(){}
   bool addFrame(Frame::Ptr frame);
@@ -68,6 +77,7 @@ public:
   
   
   static int methods;
+  
   
 protected:
   void extractKAD(); //keypoint and descriptors
