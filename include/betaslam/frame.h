@@ -16,9 +16,11 @@ public:
   
   Camera::Ptr camera_;
   
+  Mat gray_;
+  
 public:
   Frame(): id_(-1), time_stamp_(-1), camera_(nullptr) {}
-  Frame( long id, double time_stamp=0, SE3 Tcw=SE3(), Camera::Ptr camera=nullptr, Mat color=Mat(), Mat depth=Mat());
+  Frame( long id, double time_stamp=0, SE3 Tcw=SE3(), Camera::Ptr camera=nullptr, Mat color=Mat(), Mat depth=Mat(), Mat gray_=Mat());
   ~Frame(){}; //because camera_ is shared_ptr
   
   static Frame::Ptr createFrame();

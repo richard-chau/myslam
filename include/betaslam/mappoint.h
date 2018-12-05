@@ -16,6 +16,7 @@ public:
   Mat desc_;
   int matched_times_;
   int visible_times_;
+  int grayscale_;
   
   static long factory_id_;
   list<Frame*> observed_frames_;
@@ -24,7 +25,13 @@ public:
 			  matched_times_(0) {}
 
   MapPoint(long int id, const Vector3d& pos, const Vector3d& norm, Frame *frame=nullptr, const Mat& desc=Mat())
-    :id_(id), pos_(pos), norm_(norm), good_(true), visible_times_(1), matched_times_(1), desc_(desc){
+    :id_(id), pos_(pos), norm_(norm), good_(true), visible_times_(1), matched_times_(1), desc_(desc), grayscale_(-1){
+      observed_frames_.push_back(frame);
+    }
+
+  MapPoint(long int id, const Vector3d& pos, const Vector3d& norm, Frame *frame=nullptr, float grayscale=0)
+    :id_(id), pos_(pos), norm_(norm), good_(true), visible_times_(1), matched_times_(1), grayscale_(grayscale) {
+      desc_ = Mat();
       observed_frames_.push_back(frame);
     }
     
@@ -33,13 +40,19 @@ public:
     }
   
   static MapPoint::Ptr createMapPoint() {
-    return Ptr(new MapPoint(factory_id_++, Vector3d(0,0,0), Vector3d(0,0,0)) );
+    return Ptr(new MapPoint(factory_id_++, Vector3d(0,0,0), Vector3d(0,0,0), nullptr, Mat() ));
   }
   
   static MapPoint::Ptr createMapPoint(const Vector3d& pos_world, const Vector3d& norm, 
     const Mat& descriptor, Frame* frame
   ) {
     return Ptr(new MapPoint(factory_id_++, pos_world, norm, frame, descriptor));
+  }
+  
+  static MapPoint::Ptr createMapPointWithGrayScale(const Vector3d& pos_world, const Vector3d& norm, 
+    float grayscale, Frame* frame
+  ) {
+    return Ptr(new MapPoint(factory_id_++, pos_world, norm, frame, grayscale));
   }
 };
   

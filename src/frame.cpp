@@ -1,8 +1,9 @@
 #include "betaslam/frame.h"
 
 namespace betaslam {
-Frame::Frame(long int id, double time_stamp, SE3 Tcw, Camera::Ptr camera, Mat color, Mat depth):
-  id_(id), time_stamp_(time_stamp), Tcw_(Tcw), camera_(camera), color_(color), depth_(depth) {}
+Frame::Frame(long int id, double time_stamp, SE3 Tcw, Camera::Ptr camera, Mat color, Mat depth, Mat gray):
+  id_(id), time_stamp_(time_stamp), Tcw_(Tcw), camera_(camera), color_(color), depth_(depth), 
+  gray_(gray){}
   
 Frame::Ptr Frame::createFrame()
 {

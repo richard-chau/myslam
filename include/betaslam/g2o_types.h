@@ -31,6 +31,47 @@ public:
     Camera* camera_;
 };
 
+
+// project a 3d point into an image plane, the error is photometric error
+// an unary edge with one vertex SE3Expmap (the pose of camera)
+class EdgeSE3ProjectDirect: public g2o::BaseUnaryEdge< 1, double, g2o::VertexSE3Expmap>
+{
+public:
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+
+    EdgeSE3ProjectDirect() {}
+
+    EdgeSE3ProjectDirect ( Eigen::Vector3d point, float fx, float fy, float cx, float cy, cv::Mat* image )
+        : x_world_ ( point ), fx_ ( fx ), fy_ ( fy ), cx_ ( cx ), cy_ ( cy ), image_ ( image )
+    {}
+
+    virtual void computeError();
+    virtual void linearizeOplus();
+
+    // dummy read and write functions because we don't care...
+    virtual bool read ( std::istream& in ) {}
+    virtual bool write ( std::ostream& out ) const {}
+
+protected:
+    // get a gray scale value from reference image (bilinear interpolated)
+    inline float getPixelValue ( float x, float y )
+    {
+        uchar* data = & image_->data[ int ( y ) * image_->step + int ( x ) ];
+        float xx = x - floor ( x );
+        float yy = y - floor ( y );
+        return float (
+                   ( 1-xx ) * ( 1-yy ) * data[0] +
+                   xx* ( 1-yy ) * data[1] +
+                   ( 1-xx ) *yy*data[ image_->step ] +
+                   xx*yy*data[image_->step+1]
+               );
+    }
+public:
+    Eigen::Vector3d x_world_;   // 3D point in world frame
+    float cx_=0, cy_=0, fx_=0, fy_=0; // Camera intrinsics
+    cv::Mat* image_=nullptr;    // reference image
+};
+
 }
 
 #endif

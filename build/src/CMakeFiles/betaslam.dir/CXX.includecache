@@ -123,6 +123,8 @@ betaslam/frame.h
 /home/winter/Desktop/slam/slambook-master/project/newslam/src/g2o_types.cpp
 betaslam/g2o_types.h
 /home/winter/Desktop/slam/slambook-master/project/newslam/src/betaslam/g2o_types.h
+betaslam/common_include.h
+/home/winter/Desktop/slam/slambook-master/project/newslam/src/betaslam/common_include.h
 
 /home/winter/Desktop/slam/slambook-master/project/newslam/src/mappoint.cpp
 betaslam/mappoint.h

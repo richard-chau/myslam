@@ -7,7 +7,8 @@ namespace betaslam {
     cout << "created" << endl;
     if ( config_ == nullptr ) {
       config_ = shared_ptr<Config>(new Config);
-      config_->dataset_dir  = "/home/winter/Desktop/slam/slambook-master/rgbd_dataset_freiburg1_xyz";
+      config_->dataset_dir  = //"/home/winter/Desktop/slam/slambook-master/ch8/data/data/";
+      "/home/winter/Desktop/slam/slambook-master/rgbd_dataset_freiburg1_xyz";
       config_->kmap["camera_fx"] = 517.3;
       config_->kmap["camera_fy"] = 516.5;
       config_->kmap["camera_cx"] = 325.1;

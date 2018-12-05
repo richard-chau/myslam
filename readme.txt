@@ -7,7 +7,7 @@ Branch 0.2:
 Add the function of bundle adjustment of PnP generated pose in G2O. Extend a class in G2O and construct the vertices and edges. Replace cv::BFM with cv:flann. 
 
 Branch 0.3: 
-Add local map for visual odemetry. Avoid simple pair-wise matching, instead maintain a map (descriptors cache). Add new struct map & mappoint. 
+Add local map for visual odometry. Avoid simple pair-wise matching, instead maintain a map (descriptors cache). Add new struct map & mappoint. 
 Update map with deleting and adding points. Maintain a good map size so that achieve a good speed. 
 Currently 0.01-0.03 s one frame.
  

@@ -16,7 +16,7 @@ public:
   Map::Ptr map_;
   Frame::Ptr curr_, ref_;
   
-  std::vector<cv::KeyPoint> keypoints_curr_;
+  std::vector<cv::KeyPoint> keypoints_curr_; //init in cv::orb
   Mat desc_curr_;
   Mat desc_ref_;
   //std::vector<cv::DMatch> goodmatches_;
@@ -44,9 +44,28 @@ public:
 					    Config::get_param("scale_factor"), 
 					    Config::get_param("level_pyramid" ))),
 	matcher(new cv::flann::LshIndexParams(5,10,2)), map_(new Map),
-	map_point_erase_ratio_(Config::get_param("map_point_erase_ratio")){}
+	map_point_erase_ratio_(Config::get_param("map_point_erase_ratio")){
+	  
+	Eigen::Isometry3d tmp_tcw = Eigen::Isometry3d::Identity();
+	Tcw_ = SE3 (
+	  tmp_tcw.rotation(),
+	  tmp_tcw.translation()
+	);
+    }
   ~VO(){}
   bool addFrame(Frame::Ptr frame);
+  
+  
+  struct Measurement { //replace keypoints_curr_ and desc 
+    Measurement(Eigen::Vector3d p, float(g)): pw_(p), grayscale(g) {}
+    Eigen::Vector3d pw_;
+    float grayscale;
+  };
+  bool addFrame_ds(Frame::Ptr frame); //semidense
+  std::vector<Measurement> measurements;
+  
+  
+  static int methods;
   
 protected:
   void extractKAD(); //keypoint and descriptors
@@ -60,6 +79,9 @@ protected:
   void updateMap();
   void addMapPoints();
   double getViewAngle( Frame::Ptr frame, MapPoint::Ptr point );
+  
+  void extractInitPt();
+  void PoseDirect();
   
 };
 }

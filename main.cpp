@@ -30,6 +30,7 @@ int main(int argc, char **argv) {
     int i=0;
     
     
+    
     while( !fin.eof() ) {
 	string rgb_time, rgb_file, depth_time, depth_file;
 	fin >> rgb_time >> rgb_file >> depth_time >> depth_file;
@@ -49,6 +50,9 @@ int main(int argc, char **argv) {
     cout<<"read total "<<rgb_files.size() <<" entries"<<endl;
     betaslam::Camera::Ptr camera(new betaslam::Camera); //or write func createcamera in class
     betaslam::VO::Ptr vo(new betaslam::VO);
+    
+    int methods = 1;
+    betaslam::VO::methods = methods;
     
      // visualization
     cv::viz::Viz3d vis("Visual Odometry");
@@ -70,6 +74,11 @@ int main(int argc, char **argv) {
 	
 	betaslam::Frame::Ptr pFrame = betaslam::Frame::createFrame();
 	pFrame->camera_ = camera; pFrame->color_ = color;  pFrame->depth_ = depth; pFrame->time_stamp_ = rgb_times[i];
+	cv::Mat gray;
+	
+	cv::cvtColor(color, gray, cv::COLOR_BGR2GRAY);
+	
+	pFrame->gray_ = gray;
 	
 	boost::timer timer;
 	vo->addFrame(pFrame);
@@ -110,7 +119,9 @@ int main(int argc, char **argv) {
 	//cv::namedWindow("Display Image", cv::WINDOW_AUTOSIZE );
 	//cv::imshow("Display Image", color);
 	//cv::waitKey(0);
-	//if (i == 2) break;
+	//if (i == 3) break;
+	cout << vo->curr_->Tcw_ << " " << vo->ref_->Tcw_ << endl;
+	cout << pFrame->Tcw_ << endl;
     }
     
     

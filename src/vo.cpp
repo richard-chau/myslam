@@ -181,7 +181,7 @@ void VO::PosePnP()
 bool VO::checkgoodPose()
 {
 // check if the estimated pose is good
-    if ( num_inliers_ < Config::get_param("min_inliers") )
+    if (VO::methods==0 && num_inliers_ < Config::get_param("min_inliers") )
     {
         cout<<"reject because inlier is too small: "<<num_inliers_<<endl;
         return false;
@@ -197,9 +197,11 @@ bool VO::checkgoodPose()
 }
 
 
+
 bool VO::addFrame(Frame::Ptr frame)
 {
-  
+  if(VO::methods == 1) 
+    return addFrame_ds(frame);
   
   switch(state_) {
     case INITIALIZING: {
@@ -267,10 +269,19 @@ void VO::addKeyFrame() {
 	    curr_->Tcw_, d);
 	Vector3d n = pw - ref_->getCamCenter();
 	n.normalize();
-	MapPoint::Ptr map_pt = MapPoint::createMapPoint(
-	  pw, n, desc_curr_.row(i).clone(), curr_.get()//raw pointer to frame!!!!
-	);
-	
+	MapPoint::Ptr map_pt;
+	if (VO::methods == 0) {
+	  map_pt = MapPoint::createMapPoint(
+	    pw, n, desc_curr_.row(i).clone(), curr_.get()//raw pointer to frame!!!!
+	  );
+	} else {
+	  int y = keypoints_curr_[i].pt.y;
+	  int x = keypoints_curr_[i].pt.x;
+	  float grayscale = curr_->gray_.ptr<ushort>(y)[x];
+	  map_pt = MapPoint::createMapPointWithGrayScale(
+	    pw, n, grayscale, curr_.get()//raw pointer to frame!!!!
+	  );
+	}
 	map_->insertMapPoint(map_pt);
     }
     
@@ -287,6 +298,8 @@ bool VO::checkKeyFrame()
   Sophus::Vector6d d = Trc.log();
   Vector3d trans = d.head<3>();
   Vector3d rot = d.tail<3>();
+  cout << trans.norm() << " " << rot.norm() << endl;
+  return true;
   if (rot.norm() > Config::get_param("keyframe_rotation") || trans.norm() > Config::get_param("keyframe_translation"))
     return true;
   
@@ -317,9 +330,20 @@ void VO::addMapPoints() //init_=0 in declaration
 	    curr_->Tcw_, d);
 	Vector3d n = pw - ref_->getCamCenter();
 	n.normalize();
-	MapPoint::Ptr map_pt = MapPoint::createMapPoint(
-	  pw, n, desc_curr_.row(i).clone(), curr_.get()//raw pointer to frame!!!!
-	);
+	
+	MapPoint::Ptr map_pt;
+	if (VO::methods == 0) {
+	  map_pt = MapPoint::createMapPoint(
+	    pw, n, desc_curr_.row(i).clone(), curr_.get()//raw pointer to frame!!!!
+	  );
+	} else {
+	  int y = keypoints_curr_[i].pt.y;
+	  int x = keypoints_curr_[i].pt.x;
+	  float grayscale = curr_->gray_.ptr<ushort>(y)[x];
+	  map_pt = MapPoint::createMapPointWithGrayScale(
+	    pw, n, grayscale, curr_.get()//raw pointer to frame!!!!
+	  );
+	}
 	
 	map_->insertMapPoint(map_pt);
     }
@@ -381,4 +405,166 @@ double VO::getViewAngle ( Frame::Ptr frame, MapPoint::Ptr point )
 }
 
 
+
+void VO::extractInitPt()
+{
+  cv::Mat gray = curr_->gray_;
+  //cv::cvtColor(curr_->color_, gray, cv::COLOR_BGR2GRAY);
+  //curr_->gray_ = gray;
+  
+  for(int y=10; y<gray.rows-10; ++y){
+    for(int x=10; x<gray.cols - 10; ++x) 
+       {
+	Vector2d delta(gray.ptr<uchar>(y)[x+1] - gray.ptr<uchar>(y)[x-1],
+		       gray.ptr<uchar>(y+1)[x] - gray.ptr<uchar>(y-1)[x]
+		 );
+	if (delta.norm() < 50) 
+	  continue;
+	
+	keypoints_curr_.push_back(cv::KeyPoint(cv::Point2f(x, y), 0)); //size
+	
+// 	double d = double(curr_->depth_.ptr<ushort>(y)[x]) / curr_->camera_->depth_scale_;
+// 	//just like Frame::findDepth(cv::KeyPoint) but depth must exist here
+// 	if (d == 0) 
+// 	  continue;
+// 	
+// 	keypoints_curr_.push_back(cv::KeyPoint(cv::Point2f(x, y), 0)); //size
+// 	
+// 	Vector3d p3d = curr_->camera_->p2c(Vector2d(x, y), d);
+// 	float grayscale = float ( gray.ptr<uchar> (y) [x] );
+// 	measurements.push_back(Measurement(p3d, grayscale));
+      }
+  }
+  cout << "keypoint size:" <<  keypoints_curr_.size() << endl;
+}
+
+
+void VO::PoseDirect()
+{
+  
+  measurements.clear();
+  for(auto &item : map_->map_points_) {
+      MapPoint::Ptr p = item.second;
+      if (curr_->isInFrame(p->pos_)){
+	  p->visible_times_ += 1;
+	  Vector3d c_tmp = ref_->camera_->w2c(p->pos_, ref_->Tcw_);
+	  measurements.push_back(Measurement(c_tmp, p->grayscale_));
+      } //else ?? TODO
+  }
+  
+    //Mat K = ( cv::Mat_<double>(3,3) << ref_->camera_->fx_, 0, ref_->camera_->cx_, 
+	//    0, ref_->camera_->fy_,  ref_->camera_->cy_, 0, 0, 1 );
+  
+    Eigen::Matrix3f K;
+    K << ref_->camera_->fx_, 0, ref_->camera_->cx_, 
+	   0, ref_->camera_->fy_,  ref_->camera_->cy_, 0, 0, 1;
+    //<<fx,0.f,cx,0.f,fy,cy,0.f,0.f,1.0f;
+ 
+    typedef g2o::BlockSolver<g2o::BlockSolverTraits<6,1>> DirectBlock; 
+    DirectBlock::LinearSolverType* linearSolver = new g2o::LinearSolverDense< DirectBlock::PoseMatrixType > ();
+    DirectBlock* solver_ptr = new DirectBlock ( linearSolver );
+    // g2o::OptimizationAlgorithmGaussNewton* solver = new g2o::OptimizationAlgorithmGaussNewton( solver_ptr ); // G-N
+    g2o::OptimizationAlgorithmLevenberg* solver = new g2o::OptimizationAlgorithmLevenberg ( solver_ptr ); // L-M
+    g2o::SparseOptimizer optimizer;
+    optimizer.setAlgorithm ( solver );
+    //optimizer.setVerbose( true );
+
+    
+    
+    g2o::VertexSE3Expmap* pose = new g2o::VertexSE3Expmap();
+    
+    pose->setEstimate ( g2o::SE3Quat ( Tcw_.rotation_matrix(), Tcw_.translation() ) );
+    pose->setId ( 0 );
+    optimizer.addVertex ( pose );
+
+    int id=1;
+    for ( Measurement m: measurements )
+    {
+        EdgeSE3ProjectDirect* edge = new EdgeSE3ProjectDirect (
+            m.pw_,
+            K ( 0,0 ), K ( 1,1 ), K ( 0,2 ), K ( 1,2 ), &(curr_->gray_) //pointer!
+        );
+        edge->setVertex ( 0, pose );
+        edge->setMeasurement ( m.grayscale );
+        edge->setInformation ( Eigen::Matrix<double,1,1>::Identity() );
+        edge->setId ( id++ );
+        optimizer.addEdge ( edge );
+    }
+    cout<<"edges in graph: "<<optimizer.edges().size() <<endl;
+    optimizer.initializeOptimization();
+    optimizer.optimize ( 30 );
+    //Tcw_ = pose->estimate();
+  
+    Tcw_ = SE3 (
+    pose->estimate().rotation(),
+    pose->estimate().translation()
+  );
+    Tcw_ = Tcw_ * ref_->Tcw_;
+}
+
+
+bool VO::addFrame_ds(Frame::Ptr frame)
+{
+  static int cnt = 0;
+  
+  switch(state_) {
+    case INITIALIZING: {
+     state_ = OK;
+     curr_ = ref_ = frame;
+     
+     //cv::cvtColor(curr_->color_, curr_->gray_, cv::COLOR_BGR2GRAY);
+     extractInitPt();
+     cout << "b " << endl;
+     //extractKAD();
+     //updateRef();
+     //addMapPoints(1);
+     addKeyFrame();
+     cout << "a " << endl;
+
+     break;
+    }
+    case OK: {
+     ++cnt; 
+      
+     curr_ = frame;
+     //cv::cvtColor(curr_->color_, curr_->gray_, cv::COLOR_BGR2GRAY);
+     curr_->Tcw_ = ref_->Tcw_;// different from 0.2!!
+     //extractKAD();
+    
+     //featureMatching();
+     PoseDirect();
+     //PosePnP();
+     
+     if (cnt > 2 && checkgoodPose()) { //If Tcw_ is good, then assign it to curr_
+       //curr_->Tcw_ = Tcr_ * ref_->Tcw_;
+       curr_->Tcw_ = Tcw_;
+       updateMap(); // addpoints() in this function
+       //ref_ = curr_; // only occurs in addKeyFrame() and INITIALIZING
+       //updateRef();
+       num_lost_ = 0;
+       
+       if (checkKeyFrame())  addKeyFrame(); //cache the features & descripters in this frame
+       
+     } else {
+	++num_lost_;
+	if (num_lost_ > Config::get_param("max_num_lost")) {
+	    state_ = LOST;
+	}
+	return false;
+     }
+     
+      break;
+    }
+    case LOST:
+    {
+     cout << "VO has lost!" << endl;
+      break;
+    }
+    
+    return true;
+  }
+}
+
+
+int betaslam::VO::methods = 0;
 }
