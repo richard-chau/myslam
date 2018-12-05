@@ -46,11 +46,13 @@ public:
 	matcher(new cv::flann::LshIndexParams(5,10,2)), map_(new Map),
 	map_point_erase_ratio_(Config::get_param("map_point_erase_ratio")){
 	  
-	Eigen::Isometry3d tmp_tcw = Eigen::Isometry3d::Identity();
+	Eigen::Isometry3d tmp_tcw = Eigen::Isometry3d::Identity();// [t | R] 
+	
 	Tcw_ = SE3 (
 	  tmp_tcw.rotation(),
 	  tmp_tcw.translation()
 	);
+	
     }
   ~VO(){}
   bool addFrame(Frame::Ptr frame);

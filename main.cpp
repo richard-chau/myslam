@@ -17,6 +17,8 @@
 int main(int argc, char **argv) {
     betaslam::Config::create();
     string dataset_dir = betaslam::Config::get_dataset ("dataset_dir");
+    dataset_dir  = "/home/winter/Desktop/slam/slambook-master/ch8/data/data/";
+    
     float camera_fx = betaslam::Config::get_param("camera_fx");
     cout << dataset_dir << "sfdads " << camera_fx << endl;
     ifstream fin( dataset_dir + "/associate.txt");
@@ -107,13 +109,13 @@ int main(int argc, char **argv) {
 	Mat img_show = color.clone();
 	for(auto &pt: vo->map_->map_points_) {
 	    Vector2d pixel = pFrame->camera_->w2p(pt.second->pos_, pFrame->Tcw_);
-	    cv::circle(img_show, cv::Point2f(pixel(0,0), pixel(1,0)), 3, cv::Scalar(0,0,255), 2);
+	    cv::circle(img_show, cv::Point2f(pixel(0,0), pixel(1,0)), 1, cv::Scalar(0,0,255), 2);
 	}
 	
         cv::imshow("image", img_show);//color );
-        cv::waitKey(1);
+        cv::waitKey(0);
         vis.setWidgetPose( "Camera", M);
-        vis.spinOnce(1, false);
+        vis.spinOnce(0, false);
 	
 	
 	//cv::namedWindow("Display Image", cv::WINDOW_AUTOSIZE );

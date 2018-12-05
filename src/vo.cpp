@@ -288,6 +288,7 @@ void VO::addKeyFrame() {
   }
   
   map_->insertKeyFrame(curr_);
+  
   ref_ = curr_;//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   Correct?
 }
 
@@ -298,8 +299,8 @@ bool VO::checkKeyFrame()
   Sophus::Vector6d d = Trc.log();
   Vector3d trans = d.head<3>();
   Vector3d rot = d.tail<3>();
-  cout << trans.norm() << " " << rot.norm() << endl;
-  return true;
+  cout <<"check keyframe: norm of t and r"<< trans.norm() << " " << rot.norm() << endl;
+  //return true;
   if (rot.norm() > Config::get_param("keyframe_rotation") || trans.norm() > Config::get_param("keyframe_translation"))
     return true;
   
@@ -377,6 +378,8 @@ void VO::updateMap()
             iter = map_->map_points_.erase(iter);
             continue;
         }
+        
+        
         //cout<<"map points: "<<map_->map_points_.size()<<endl;
         //if ( iter->second->good_ == false )
         //{
@@ -385,16 +388,16 @@ void VO::updateMap()
         iter++;
     }
     
-    if ( matched_2d.size()<100 )
-        addMapPoints();
-    if ( map_->map_points_.size() > 1000 )  
-    {
-        // TODO map is too large, remove some one 
-        map_point_erase_ratio_ += 0.05;
-    }
-    else 
-        map_point_erase_ratio_ = 0.1;
-    cout<<"map points: "<<map_->map_points_.size()<<endl;
+//     if ( matched_2d.size()<100 )
+//         addMapPoints();
+//     if ( map_->map_points_.size() > 1000 )  
+//     {
+//         // TODO map is too large, remove some one 
+//         map_point_erase_ratio_ += 0.05;
+//     }
+//     else 
+//         map_point_erase_ratio_ = 0.1;
+//     cout<<"map points: "<<map_->map_points_.size()<<endl;
 }
 
 double VO::getViewAngle ( Frame::Ptr frame, MapPoint::Ptr point )
@@ -421,20 +424,22 @@ void VO::extractInitPt()
 	if (delta.norm() < 50) 
 	  continue;
 	
+	//keypoints_curr_.push_back(cv::KeyPoint(cv::Point2f(x, y), 0)); //size
+	
+ 	double d = double(curr_->depth_.ptr<ushort>(y)[x]) / curr_->camera_->depth_scale_;
+	//just like Frame::findDepth(cv::KeyPoint) but depth must exist here
+	if (d == 0) 
+	  continue;
+	
 	keypoints_curr_.push_back(cv::KeyPoint(cv::Point2f(x, y), 0)); //size
 	
-// 	double d = double(curr_->depth_.ptr<ushort>(y)[x]) / curr_->camera_->depth_scale_;
-// 	//just like Frame::findDepth(cv::KeyPoint) but depth must exist here
-// 	if (d == 0) 
-// 	  continue;
-// 	
-// 	keypoints_curr_.push_back(cv::KeyPoint(cv::Point2f(x, y), 0)); //size
-// 	
-// 	Vector3d p3d = curr_->camera_->p2c(Vector2d(x, y), d);
-// 	float grayscale = float ( gray.ptr<uchar> (y) [x] );
-// 	measurements.push_back(Measurement(p3d, grayscale));
+	Vector3d p3d = curr_->camera_->p2c(Vector2d(x, y), d);
+	float grayscale = float ( gray.ptr<uchar> (y) [x] );
+	measurements.push_back(Measurement(p3d, grayscale));
+	
       }
   }
+  
   cout << "keypoint size:" <<  keypoints_curr_.size() << endl;
 }
 
@@ -442,24 +447,25 @@ void VO::extractInitPt()
 void VO::PoseDirect()
 {
   
-  measurements.clear();
-  for(auto &item : map_->map_points_) {
-      MapPoint::Ptr p = item.second;
-      if (curr_->isInFrame(p->pos_)){
-	  p->visible_times_ += 1;
-	  Vector3d c_tmp = ref_->camera_->w2c(p->pos_, ref_->Tcw_);
-	  measurements.push_back(Measurement(c_tmp, p->grayscale_));
-      } //else ?? TODO
-  }
+//   measurements.clear();
+//   for(auto &item : map_->map_points_) {
+//       MapPoint::Ptr p = item.second;
+//       if (curr_->isInFrame(p->pos_)){
+// 	  p->visible_times_ += 1;
+// 	  Vector3d c_tmp = ref_->camera_->w2c(p->pos_, ref_->Tcw_);
+// 	  measurements.push_back(Measurement(c_tmp, p->grayscale_));
+//       } //else ?? TODO
+//   }
   
     //Mat K = ( cv::Mat_<double>(3,3) << ref_->camera_->fx_, 0, ref_->camera_->cx_, 
 	//    0, ref_->camera_->fy_,  ref_->camera_->cy_, 0, 0, 1 );
-  
+   
     Eigen::Matrix3f K;
     K << ref_->camera_->fx_, 0, ref_->camera_->cx_, 
 	   0, ref_->camera_->fy_,  ref_->camera_->cy_, 0, 0, 1;
     //<<fx,0.f,cx,0.f,fy,cy,0.f,0.f,1.0f;
- 
+    cout <<"mm size:" <<  measurements.size() << K << endl;
+     
     typedef g2o::BlockSolver<g2o::BlockSolverTraits<6,1>> DirectBlock; 
     DirectBlock::LinearSolverType* linearSolver = new g2o::LinearSolverDense< DirectBlock::PoseMatrixType > ();
     DirectBlock* solver_ptr = new DirectBlock ( linearSolver );
@@ -494,12 +500,13 @@ void VO::PoseDirect()
     optimizer.initializeOptimization();
     optimizer.optimize ( 30 );
     //Tcw_ = pose->estimate();
-  
+    //cout << "pose es:" << pose->estimate().matrix() << endl;
     Tcw_ = SE3 (
     pose->estimate().rotation(),
     pose->estimate().translation()
   );
-    Tcw_ = Tcw_ * ref_->Tcw_;
+    cout << "pose es:" << Tcw_ << " " << pose->estimate().rotation().toRotationMatrix() << endl;
+    //Tcw_ = Tcw_ * ref_->Tcw_;
 }
 
 
@@ -511,7 +518,8 @@ bool VO::addFrame_ds(Frame::Ptr frame)
     case INITIALIZING: {
      state_ = OK;
      curr_ = ref_ = frame;
-     
+     curr_->Tcw_ = Tcw_;
+     ref_->Tcw_ = Tcw_;
      //cv::cvtColor(curr_->color_, curr_->gray_, cv::COLOR_BGR2GRAY);
      extractInitPt();
      cout << "b " << endl;
@@ -534,11 +542,14 @@ bool VO::addFrame_ds(Frame::Ptr frame)
      //featureMatching();
      PoseDirect();
      //PosePnP();
+     //curr_->Tcw_ = Tcw_;
      
-     if (cnt > 2 && checkgoodPose()) { //If Tcw_ is good, then assign it to curr_
+     
+     if (cnt < 2 || checkgoodPose()) { //If Tcw_ is good, then assign it to curr_
+       cout << "get" << endl;
        //curr_->Tcw_ = Tcr_ * ref_->Tcw_;
        curr_->Tcw_ = Tcw_;
-       updateMap(); // addpoints() in this function
+       //updateMap(); // addpoints() in this function
        //ref_ = curr_; // only occurs in addKeyFrame() and INITIALIZING
        //updateRef();
        num_lost_ = 0;
