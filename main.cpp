@@ -17,7 +17,7 @@
 int main(int argc, char **argv) {
     betaslam::Config::create();
     string dataset_dir = betaslam::Config::get_dataset ("dataset_dir");
-    dataset_dir  = "/home/winter/Desktop/slam/slambook-master/ch8/data/data/";
+    //dataset_dir  = "/home/winter/Desktop/slam/slambook-master/ch8/data/data/";
     
     float camera_fx = betaslam::Config::get_param("camera_fx");
     cout << dataset_dir << "sfdads " << camera_fx << endl;
@@ -58,8 +58,8 @@ int main(int argc, char **argv) {
     
      // visualization
     cv::viz::Viz3d vis("Visual Odometry");
-    cv::viz::WCoordinateSystem world_coor(1.0), camera_coor(0.3);
-    cv::Point3d cam_pos( 0, -1.0, -0.5 ), cam_focal_point(0,0,0), cam_y_dir(0,1,0);
+    cv::viz::WCoordinateSystem world_coor(1.0), camera_coor(0.5);
+    cv::Point3d cam_pos( 0, -1.0, -1.0 ), cam_focal_point(0,0,0), cam_y_dir(0,1,0);
     cv::Affine3d cam_pose = cv::viz::makeCameraPose( cam_pos, cam_focal_point, cam_y_dir );
     
     vis.setViewerPose( cam_pose );
@@ -114,9 +114,9 @@ int main(int argc, char **argv) {
 	}
 	
         cv::imshow("image", img_show);//color );
-        cv::waitKey(0);
+        cv::waitKey(1);
         vis.setWidgetPose( "Camera", M);
-        vis.spinOnce(0, false);
+        vis.spinOnce(1, false);
 	
 	
 	//cv::namedWindow("Display Image", cv::WINDOW_AUTOSIZE );

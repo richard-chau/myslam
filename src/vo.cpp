@@ -293,7 +293,7 @@ bool VO::checkKeyFrame()
   Sophus::Vector6d d = Trc.log();
   Vector3d trans = d.head<3>();
   Vector3d rot = d.tail<3>();
-  cout <<"check keyframe: norm of t and r"<< trans.norm() << " " << rot.norm() << endl;
+  //cout <<"check keyframe: norm of t and r"<< trans.norm() << " " << rot.norm() << endl;
   //return true;
   
   if (rot.norm() > Config::get_param("keyframe_rotation") || trans.norm() > Config::get_param("keyframe_translation"))
@@ -559,7 +559,10 @@ void VO::PoseDirect()
       addKeyFrame_ds();
   }
   
-  
+  boost::timer timer;
+     
+     
+    
     //Mat K = ( cv::Mat_<double>(3,3) << ref_->camera_->fx_, 0, ref_->camera_->cx_, 
 	//    0, ref_->camera_->fy_,  ref_->camera_->cy_, 0, 0, 1 );
    
@@ -567,7 +570,7 @@ void VO::PoseDirect()
     K << ref_->camera_->fx_, 0, ref_->camera_->cx_, 
 	   0, ref_->camera_->fy_,  ref_->camera_->cy_, 0, 0, 1;
     //<<fx,0.f,cx,0.f,fy,cy,0.f,0.f,1.0f;
-    cout <<"mm size:" <<  measurements.size() << K << endl;
+    //cout <<"mm size:" <<  measurements.size() << K << endl;
      
     typedef g2o::BlockSolver<g2o::BlockSolverTraits<6,1>> DirectBlock; 
     DirectBlock::LinearSolverType* linearSolver = new g2o::LinearSolverDense< DirectBlock::PoseMatrixType > ();
@@ -599,7 +602,7 @@ void VO::PoseDirect()
         edge->setId ( id++ );
         optimizer.addEdge ( edge );
     }
-    cout<<"edges in graph: "<<optimizer.edges().size() <<endl;
+    //cout<<"edges in graph: "<<optimizer.edges().size() <<endl;
     optimizer.initializeOptimization();
     optimizer.optimize ( 30 );
     //Tcw_ = pose->estimate();
@@ -610,6 +613,9 @@ void VO::PoseDirect()
   );
     //cout << "pose es:" << Tcw_ << " " << pose->estimate().rotation().toRotationMatrix() << endl;
     //Tcw_ = Tcw_ * ref_->Tcw_;
+
+  
+     cout<<"PoseDirectinner: "<<timer.elapsed() << endl; 
 }
 
 
@@ -689,13 +695,16 @@ bool VO::addFrame_ds(Frame::Ptr frame)
      curr_ = frame;
      curr_->Tcw_ = ref_->Tcw_;
      cout<<"map points:"<<map_->map_points_.size()<<endl;
-     PoseDirect();
+      boost::timer timer;
+      PoseDirect();
+      cout<<"PoseDirect: "<<timer.elapsed() << endl; 
+     
      //PosePnP();
      //curr_->Tcw_ = Tcw_;
      
      
      if (cnt < 2 || checkgoodPose()) { //If Tcw_ is good, then assign it to curr_
-       cout << "get" << endl;
+       //cout << "get" << endl;
        //curr_->Tcw_ = Tcr_ * ref_->Tcw_;
        curr_->Tcw_ = Tcw_;
        //updateMap_ds(); // addpoints() in this function
@@ -703,10 +712,10 @@ bool VO::addFrame_ds(Frame::Ptr frame)
        //updateRef();
        //num_lost_ = 0;
        
-       if (checkKeyFrame_ds())  {
-	 addKeyFrame_ds(); //cache the features & descripters in this frame
-	 //ref_ = curr_;
-       }
+       //if (checkKeyFrame_ds())  {
+	// addKeyFrame_ds(); //cache the features & descripters in this frame
+	 //..//ref_ = curr_;
+       //}
        
      } else {
 	++num_lost_;
