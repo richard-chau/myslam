@@ -480,7 +480,7 @@ void VO::extractInitPt()
 	Vector2d delta(gray.ptr<uchar>(y)[x+1] - gray.ptr<uchar>(y)[x-1],
 		       gray.ptr<uchar>(y+1)[x] - gray.ptr<uchar>(y-1)[x]
 		 );
-	if (delta.norm() < 50) 
+	if (delta.norm() < 100)//50) 
 	  continue;
 	
 	//keypoints_curr_.push_back(cv::KeyPoint(cv::Point2f(x, y), 0)); //size
@@ -669,14 +669,15 @@ void VO::updateMap_ds()
 bool VO::checkKeyFrame_ds()
 {
   if (map_->map_points_.size() < Config::get_param("min_ds_map_cnt")) {
-      return true;
+    cout << "Not enough map points" << endl;  
+    return true;
   } 
   
   SE3 Trc = ref_->Tcw_ * Tcw_.inverse();
   Sophus::Vector6d d = Trc.log();
   Vector3d trans = d.head<3>();
   Vector3d rot = d.tail<3>();
-  cout <<"check keyframe: norm of t and r"<< trans.norm() << " " << rot.norm() << endl;
+  //cout <<"check keyframe: norm of t and r"<< trans.norm() << " " << rot.norm() << endl;
   //return true;
   
   if (rot.norm() > Config::get_param("keyframe_rotation") || trans.norm() > Config::get_param("keyframe_translation")) {
@@ -725,10 +726,10 @@ bool VO::addFrame_ds(Frame::Ptr frame)
        //updateRef();
        //num_lost_ = 0;
        
-       if (checkKeyFrame_ds())  {
-	 addKeyFrame_ds(); //cache the features & descripters in this frame
-	 //..//ref_ = curr_;
-       }
+//        if (checkKeyFrame_ds())  {
+// 	 addKeyFrame_ds(); //cache the features & descripters in this frame
+// 	 //..//ref_ = curr_;
+//        }
        
      } else {
 	++num_lost_;

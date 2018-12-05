@@ -15,3 +15,7 @@ Currently 0.01-0.03 s one frame.
 Branch 0.4:
 Directed Method added. Direct Semi-dense Method with local map. Fix bugs and update maps from time to time. 
 Currently 0.04-0.09 s one frame. Mainly because of too many points thus over 20,000 edges in G2O. Remain to be optimized.
+
+
+
+Count total lines of code: git ls-files | xargs wc -l
