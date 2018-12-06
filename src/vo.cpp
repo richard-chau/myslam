@@ -425,9 +425,12 @@ void VO::addKeyFrame_ds() {
       //cout << keypoints_curr_[i].pt.x << keypoints_curr_[i].pt.y  <<double(curr_->gray_.ptr<uchar>(36)[35])<< endl;
       if (d < 0)
 	continue;
+//       Vector3d pw = ref_->camera_->p2w(
+// 	  Vector2d ( keypoints_curr_[i].pt.x, keypoints_curr_[i].pt.y ), 
+// 	  curr_->Tcw_, d); //curr_-->Tcw_
       Vector3d pw = ref_->camera_->p2w(
 	  Vector2d ( keypoints_curr_[i].pt.x, keypoints_curr_[i].pt.y ), 
-	  curr_->Tcw_, d);
+	  Tcw_, d); //curr_-->Tcw_
       Vector3d n = pw - ref_->getCamCenter();
       n.normalize();
       
@@ -726,10 +729,10 @@ bool VO::addFrame_ds(Frame::Ptr frame)
        //updateRef();
        //num_lost_ = 0;
        
-//        if (checkKeyFrame_ds())  {
-// 	 addKeyFrame_ds(); //cache the features & descripters in this frame
-// 	 //..//ref_ = curr_;
-//        }
+       if (checkKeyFrame_ds())  {
+	 addKeyFrame_ds(); //cache the features & descripters in this frame
+	 //..//ref_ = curr_;
+       }
        
      } else {
 	++num_lost_;
