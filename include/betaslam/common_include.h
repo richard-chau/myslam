@@ -23,5 +23,7 @@ using cv::Mat;
 #include <unordered_map>
 #include <map>
 
+#include <random>
+#include <algorithm>
 using namespace std;
 #endif

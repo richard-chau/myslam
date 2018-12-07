@@ -474,8 +474,11 @@ void VO::extractInitPt()
     tmp_tcw.rotation(),
     tmp_tcw.translation()
   );
+  
+  //curr_ = ref_ = frame; // important
   curr_->Tcw_ = Tcw_;
-  ref_->Tcw_ = Tcw_;
+  //ref_->Tcw_ = Tcw_;
+  ref_ = curr_;
   //measurements.clear();
   for(int y=10; y<gray.rows-10; ++y){
     for(int x=10; x<gray.cols - 10; ++x) 
@@ -483,7 +486,7 @@ void VO::extractInitPt()
 	Vector2d delta(gray.ptr<uchar>(y)[x+1] - gray.ptr<uchar>(y)[x-1],
 		       gray.ptr<uchar>(y+1)[x] - gray.ptr<uchar>(y-1)[x]
 		 );
-	if (delta.norm() < 100)//50) 
+	if (delta.norm() < 50)//100)//50) 
 	  continue;
 	
 	//keypoints_curr_.push_back(cv::KeyPoint(cv::Point2f(x, y), 0)); //size
@@ -503,6 +506,10 @@ void VO::extractInitPt()
       }
       
   }
+  
+auto rng = std::default_random_engine{};
+  std::shuffle(std::begin(keypoints_curr_), std::end(keypoints_curr_), rng);
+  
   //cout <<  float ( gray.ptr<uchar> (36) [35] ) << endl;
   //cout <<  float(gray.ptr<uchar> (36) [35]) << "sfa df" << endl;
   //   measurements.clear();
@@ -551,13 +558,18 @@ void VO::PoseDirect()
   
   
   std::vector<int> tobedeleted;
+  int included_cnt = 0;
   for(auto &item : map_->map_points_) {
+    ++included_cnt;
+    if (included_cnt > 10000) break;
      MapPoint::Ptr p = item.second;
      if (curr_->isInFrame(p->pos_)){
- 	  p->visible_times_ += 1;
+ 	  //p->visible_times_ += 1;
+	  //total += p->visible_times_;
+	  //if (p->visible_times_ < avg-1) continue;
 	  //Vector3d p3d = curr_->camera_->p2c(Vector2d(x, y), d);
 	//float grayscale = float ( gray.ptr<uchar> (y) [x] );
-	  measurements.emplace_back(ref_->camera_->w2c(p->pos_, ref_->Tcw_) ,p->grayscale_);
+	  measurements.emplace_back(ref_->camera_->w2c(p->pos_, ref_->Tcw_) ,p->grayscale_); //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! red_
        } else {
 	 //cout << "3 4" <<endl;
 	//map_->map_points_.erase(item.first);
@@ -568,9 +580,13 @@ void VO::PoseDirect()
       map_->map_points_.erase(i);
   }
   
+  //avg = total*1.0 / map_->map_points_.size();
+  //total = 0;
+  cout << "choose the high frequent points" << measurements.size() << endl;
   //cout << measurements.size() << endl;
   if (measurements.size() < Config::get_param("min_ds_map_cnt")) {
-      addKeyFrame_ds();
+    cout << "not enough point reduced in pose estimation" << endl;  
+    addKeyFrame_ds();
   }
   
   boost::timer timer;
@@ -599,7 +615,7 @@ void VO::PoseDirect()
     
     g2o::VertexSE3Expmap* pose = new g2o::VertexSE3Expmap();
     
-    pose->setEstimate ( g2o::SE3Quat ( Tcw_.rotation_matrix(), Tcw_.translation() ) );
+    pose->setEstimate ( g2o::SE3Quat ( Tcw_.rotation_matrix(), Tcw_.translation() ) ); // Tcw_: world is map coordinate: ref_
     pose->setId ( 0 );
     optimizer.addVertex ( pose );
 
@@ -618,7 +634,7 @@ void VO::PoseDirect()
     }
     //cout<<"edges in graph: "<<optimizer.edges().size() <<endl;
     optimizer.initializeOptimization();
-    optimizer.optimize ( 30 );
+    optimizer.optimize ( 15 );
     //Tcw_ = pose->estimate();
     //cout << "pose es:" << pose->estimate().matrix() << endl;
     Tcw_ = SE3 (
@@ -683,7 +699,7 @@ bool VO::checkKeyFrame_ds()
   //cout <<"check keyframe: norm of t and r"<< trans.norm() << " " << rot.norm() << endl;
   //return true;
   
-  if (rot.norm() > Config::get_param("keyframe_rotation") || trans.norm() > Config::get_param("keyframe_translation")) {
+  if (rot.norm() > Config::get_param("keyframe_rotation") * 0.75 || trans.norm() > Config::get_param("keyframe_translation") * 0.75) {
     cout << "Warning: Direct semi-dense has abnormal rotation/translation magnitude. Rebuild the map" << endl;
     return true;
   }  
@@ -708,8 +724,8 @@ bool VO::addFrame_ds(Frame::Ptr frame)
      ++cnt; 
       
      curr_ = frame;
-     curr_->Tcw_ = ref_->Tcw_;
-     cout<<"map points:"<<map_->map_points_.size()<<endl;
+     //curr_->Tcw_ = ref_->Tcw_;
+      cout<<"map points:"<<map_->map_points_.size()<<endl;
       boost::timer timer;
       PoseDirect();
       cout<<"PoseDirect: "<<timer.elapsed() << endl; 

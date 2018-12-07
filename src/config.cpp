@@ -22,7 +22,7 @@ namespace betaslam {
       config_->kmap["camera_cy"] = 249.7;
       config_->kmap["camera_depth_scale"] = 5000.0;
       
-      config_->kmap["number_of_features"] = 800;//500;
+      config_->kmap["number_of_features"] = 700;//800;//500;
       config_->kmap["scale_factor"] = 1.2;
       config_->kmap["level_pyramid"] = 4;//8;
       config_->kmap["match_ratio"] = 2;
@@ -32,7 +32,7 @@ namespace betaslam {
       config_->kmap["min_inliers"] = 30;//10;
       config_->kmap["map_point_erase_ratio"]= 0.1;////0.5;
       
-      config_->kmap["min_ds_map_cnt"] = 3000; //direct-semidense
+      config_->kmap["min_ds_map_cnt"] = 10000; //direct-semidense
     }
   }
 }

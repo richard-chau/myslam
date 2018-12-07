@@ -53,7 +53,7 @@ int main(int argc, char **argv) {
     betaslam::Camera::Ptr camera(new betaslam::Camera); //or write func createcamera in class
     betaslam::VO::Ptr vo(new betaslam::VO);
     
-    int methods = 1;
+    int methods = 0;
     betaslam::VO::methods = methods;
     
      // visualization
@@ -116,7 +116,7 @@ int main(int argc, char **argv) {
 	Mat img_show = color.clone();
 	for(auto &pt: vo->map_->map_points_) {
 	    Vector2d pixel = pFrame->camera_->w2p(pt.second->pos_, pFrame->Tcw_);
-	    cv::circle(img_show, cv::Point2f(pixel(0,0), pixel(1,0)), 1, cv::Scalar(0,0,255), 2);
+	    cv::circle(img_show, cv::Point2f(pixel(0,0), pixel(1,0)), 3, cv::Scalar(0,0,255), 2);
 	}
 	
         cv::imshow("image", img_show);//color );
