@@ -19,6 +19,6 @@ Currently 0.04-0.09 s one frame. Mainly because of too many points thus over 20,
 ## Video:
 [![Watch the video](https://raw.github.com/GabLeRoux/WebMole/master/ressources/WebMole_Youtube_Video.png)](https://drive.google.com/open?id=1tz-6XCIpMEoaopn1IC4oTPgiTRQZHe2x)
 
-## Branch 0.5:
+## Branch 0.5 & 0.6: Loop closure with naive & bow methods (plus visualization)
 
 #####Count total lines of code: git ls-files | xargs wc -l
