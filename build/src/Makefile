@@ -69,8 +69,8 @@ rebuild_cache/fast: rebuild_cache
 
 # Special rule for the target edit_cache
 edit_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
-	/usr/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake cache editor..."
+	/usr/bin/cmake-gui -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
 .PHONY : edit_cache
 
 # Special rule for the target edit_cache
@@ -260,6 +260,33 @@ mappoint.cpp.s:
 	cd /home/winter/Desktop/slam/slambook-master/project/newslam/build && $(MAKE) -f src/CMakeFiles/betaslam.dir/build.make src/CMakeFiles/betaslam.dir/mappoint.cpp.s
 .PHONY : mappoint.cpp.s
 
+pointcloud.o: pointcloud.cpp.o
+
+.PHONY : pointcloud.o
+
+# target to build an object file
+pointcloud.cpp.o:
+	cd /home/winter/Desktop/slam/slambook-master/project/newslam/build && $(MAKE) -f src/CMakeFiles/betaslam.dir/build.make src/CMakeFiles/betaslam.dir/pointcloud.cpp.o
+.PHONY : pointcloud.cpp.o
+
+pointcloud.i: pointcloud.cpp.i
+
+.PHONY : pointcloud.i
+
+# target to preprocess a source file
+pointcloud.cpp.i:
+	cd /home/winter/Desktop/slam/slambook-master/project/newslam/build && $(MAKE) -f src/CMakeFiles/betaslam.dir/build.make src/CMakeFiles/betaslam.dir/pointcloud.cpp.i
+.PHONY : pointcloud.cpp.i
+
+pointcloud.s: pointcloud.cpp.s
+
+.PHONY : pointcloud.s
+
+# target to generate assembly for a file
+pointcloud.cpp.s:
+	cd /home/winter/Desktop/slam/slambook-master/project/newslam/build && $(MAKE) -f src/CMakeFiles/betaslam.dir/build.make src/CMakeFiles/betaslam.dir/pointcloud.cpp.s
+.PHONY : pointcloud.cpp.s
+
 vo.o: vo.cpp.o
 
 .PHONY : vo.o
@@ -311,6 +338,9 @@ help:
 	@echo "... mappoint.o"
 	@echo "... mappoint.i"
 	@echo "... mappoint.s"
+	@echo "... pointcloud.o"
+	@echo "... pointcloud.i"
+	@echo "... pointcloud.s"
 	@echo "... vo.o"
 	@echo "... vo.i"
 	@echo "... vo.s"

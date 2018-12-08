@@ -14,6 +14,72 @@
 # EXTERNAL cache entries
 ########################
 
+//The threading library used by boost-thread
+BOOST_THREAD_LIBRARY:FILEPATH=/usr/lib/x86_64-linux-gnu/libpthread.so
+
+//Boost atomic library (debug)
+Boost_ATOMIC_LIBRARY_DEBUG:FILEPATH=/usr/lib/x86_64-linux-gnu/libboost_atomic.so
+
+//Boost atomic library (release)
+Boost_ATOMIC_LIBRARY_RELEASE:FILEPATH=/usr/lib/x86_64-linux-gnu/libboost_atomic.so
+
+//Boost chrono library (debug)
+Boost_CHRONO_LIBRARY_DEBUG:FILEPATH=/usr/lib/x86_64-linux-gnu/libboost_chrono.so
+
+//Boost chrono library (release)
+Boost_CHRONO_LIBRARY_RELEASE:FILEPATH=/usr/lib/x86_64-linux-gnu/libboost_chrono.so
+
+//Boost date_time library (debug)
+Boost_DATE_TIME_LIBRARY_DEBUG:FILEPATH=/usr/lib/x86_64-linux-gnu/libboost_date_time.so
+
+//Boost date_time library (release)
+Boost_DATE_TIME_LIBRARY_RELEASE:FILEPATH=/usr/lib/x86_64-linux-gnu/libboost_date_time.so
+
+//Boost filesystem library (debug)
+Boost_FILESYSTEM_LIBRARY_DEBUG:FILEPATH=/usr/lib/x86_64-linux-gnu/libboost_filesystem.so
+
+//Boost filesystem library (release)
+Boost_FILESYSTEM_LIBRARY_RELEASE:FILEPATH=/usr/lib/x86_64-linux-gnu/libboost_filesystem.so
+
+//Path to a file.
+Boost_INCLUDE_DIR:PATH=/usr/include
+
+//Boost iostreams library (debug)
+Boost_IOSTREAMS_LIBRARY_DEBUG:FILEPATH=/usr/lib/x86_64-linux-gnu/libboost_iostreams.so
+
+//Boost iostreams library (release)
+Boost_IOSTREAMS_LIBRARY_RELEASE:FILEPATH=/usr/lib/x86_64-linux-gnu/libboost_iostreams.so
+
+//Boost library directory DEBUG
+Boost_LIBRARY_DIR_DEBUG:PATH=/usr/lib/x86_64-linux-gnu
+
+//Boost library directory RELEASE
+Boost_LIBRARY_DIR_RELEASE:PATH=/usr/lib/x86_64-linux-gnu
+
+//Boost regex library (debug)
+Boost_REGEX_LIBRARY_DEBUG:FILEPATH=/usr/lib/x86_64-linux-gnu/libboost_regex.so
+
+//Boost regex library (release)
+Boost_REGEX_LIBRARY_RELEASE:FILEPATH=/usr/lib/x86_64-linux-gnu/libboost_regex.so
+
+//Boost serialization library (debug)
+Boost_SERIALIZATION_LIBRARY_DEBUG:FILEPATH=/usr/lib/x86_64-linux-gnu/libboost_serialization.so
+
+//Boost serialization library (release)
+Boost_SERIALIZATION_LIBRARY_RELEASE:FILEPATH=/usr/lib/x86_64-linux-gnu/libboost_serialization.so
+
+//Boost system library (debug)
+Boost_SYSTEM_LIBRARY_DEBUG:FILEPATH=/usr/lib/x86_64-linux-gnu/libboost_system.so
+
+//Boost system library (release)
+Boost_SYSTEM_LIBRARY_RELEASE:FILEPATH=/usr/lib/x86_64-linux-gnu/libboost_system.so
+
+//Boost thread library (debug)
+Boost_THREAD_LIBRARY_DEBUG:FILEPATH=/usr/lib/x86_64-linux-gnu/libboost_thread.so
+
+//Boost thread library (release)
+Boost_THREAD_LIBRARY_RELEASE:FILEPATH=/usr/lib/x86_64-linux-gnu/libboost_thread.so
+
 //Path to a program.
 CMAKE_AR:FILEPATH=/usr/bin/ar
 
@@ -165,6 +231,9 @@ CMAKE_STRIP:FILEPATH=/usr/bin/strip
 // Studio IDE projects all commands are done without /nologo.
 CMAKE_VERBOSE_MAKEFILE:BOOL=FALSE
 
+//Path to a file.
+EIGEN_INCLUDE_DIR:PATH=/usr/local/include/eigen3
+
 //Path to a library.
 G2O_CLI_LIBRARY:FILEPATH=/home/winter/Desktop/slam/slambook-master/3rdparty/g2o/lib/libg2o_cli.so
 
@@ -276,17 +345,107 @@ G2O_TYPES_SLAM3D:FILEPATH=/home/winter/Desktop/slam/slambook-master/3rdparty/g2o
 //Path to a library.
 G2O_TYPES_SLAM3D_DEBUG:FILEPATH=G2O_TYPES_SLAM3D_DEBUG-NOTFOUND
 
+//Path to a file.
+LIBUSB_1_INCLUDE_DIR:PATH=/usr/include
+
+//Path to a library.
+LIBUSB_1_LIBRARY:FILEPATH=/usr/lib/x86_64-linux-gnu/libusb-1.0.so
+
 //The directory containing a CMake configuration file for OpenCV.
 OpenCV_DIR:PATH=/usr/local/share/OpenCV
 
+//path to common headers
+PCL_COMMON_INCLUDE_DIR:PATH=/usr/local/include/pcl-1.9
+
+//path to pcl_common library
+PCL_COMMON_LIBRARY:FILEPATH=/usr/local/lib/libpcl_common.so
+
+//path to pcl_common library debug
+PCL_COMMON_LIBRARY_DEBUG:FILEPATH=/usr/local/lib/libpcl_common.so
+
+//The directory containing a CMake configuration file for PCL.
+PCL_DIR:PATH=/usr/local/share/pcl-1.9
+
+//path to filters headers
+PCL_FILTERS_INCLUDE_DIR:PATH=/usr/local/include/pcl-1.9
+
+//path to pcl_filters library
+PCL_FILTERS_LIBRARY:FILEPATH=/usr/local/lib/libpcl_filters.so
+
+//path to pcl_filters library debug
+PCL_FILTERS_LIBRARY_DEBUG:FILEPATH=/usr/local/lib/libpcl_filters.so
+
+//path to geometry headers
+PCL_GEOMETRY_INCLUDE_DIR:PATH=/usr/local/include/pcl-1.9
+
+//path to io headers
+PCL_IO_INCLUDE_DIR:PATH=/usr/local/include/pcl-1.9
+
+//path to pcl_io library
+PCL_IO_LIBRARY:FILEPATH=/usr/local/lib/libpcl_io.so
+
+//path to pcl_io library debug
+PCL_IO_LIBRARY_DEBUG:FILEPATH=/usr/local/lib/libpcl_io.so
+
+//path to kdtree headers
+PCL_KDTREE_INCLUDE_DIR:PATH=/usr/local/include/pcl-1.9
+
+//path to pcl_kdtree library
+PCL_KDTREE_LIBRARY:FILEPATH=/usr/local/lib/libpcl_kdtree.so
+
+//path to pcl_kdtree library debug
+PCL_KDTREE_LIBRARY_DEBUG:FILEPATH=/usr/local/lib/libpcl_kdtree.so
+
+//path to octree headers
+PCL_OCTREE_INCLUDE_DIR:PATH=/usr/local/include/pcl-1.9
+
+//path to pcl_octree library
+PCL_OCTREE_LIBRARY:FILEPATH=/usr/local/lib/libpcl_octree.so
+
+//path to pcl_octree library debug
+PCL_OCTREE_LIBRARY_DEBUG:FILEPATH=/usr/local/lib/libpcl_octree.so
+
+//path to sample_consensus headers
+PCL_SAMPLE_CONSENSUS_INCLUDE_DIR:PATH=/usr/local/include/pcl-1.9
+
+//path to pcl_sample_consensus library
+PCL_SAMPLE_CONSENSUS_LIBRARY:FILEPATH=/usr/local/lib/libpcl_sample_consensus.so
+
+//path to pcl_sample_consensus library debug
+PCL_SAMPLE_CONSENSUS_LIBRARY_DEBUG:FILEPATH=/usr/local/lib/libpcl_sample_consensus.so
+
+//path to search headers
+PCL_SEARCH_INCLUDE_DIR:PATH=/usr/local/include/pcl-1.9
+
+//path to pcl_search library
+PCL_SEARCH_LIBRARY:FILEPATH=/usr/local/lib/libpcl_search.so
+
+//path to pcl_search library debug
+PCL_SEARCH_LIBRARY_DEBUG:FILEPATH=/usr/local/lib/libpcl_search.so
+
+//path to visualization headers
+PCL_VISUALIZATION_INCLUDE_DIR:PATH=/usr/local/include/pcl-1.9
+
+//path to pcl_visualization library
+PCL_VISUALIZATION_LIBRARY:FILEPATH=/usr/local/lib/libpcl_visualization.so
+
+//path to pcl_visualization library debug
+PCL_VISUALIZATION_LIBRARY_DEBUG:FILEPATH=/usr/local/lib/libpcl_visualization.so
+
+//pkg-config executable
+PKG_CONFIG_EXECUTABLE:FILEPATH=/usr/bin/pkg-config
+
 //The directory containing a CMake configuration file for Sophus.
 Sophus_DIR:PATH=/home/winter/Desktop/slam/slambook-master/3rdparty/Sophus/build
+
+//The directory containing VTKConfig.cmake
+VTK_DIR:PATH=/usr/local/lib/cmake/vtk-7.1
 
 //Value Computed by CMake
 betaslam_BINARY_DIR:STATIC=/home/winter/Desktop/slam/slambook-master/project/newslam/build
 
 //Dependencies for the target
-betaslam_LIB_DEPENDS:STATIC=general;opencv_calib3d;general;opencv_core;general;opencv_dnn;general;opencv_features2d;general;opencv_flann;general;opencv_highgui;general;opencv_imgcodecs;general;opencv_imgproc;general;opencv_ml;general;opencv_objdetect;general;opencv_photo;general;opencv_shape;general;opencv_stitching;general;opencv_superres;general;opencv_video;general;opencv_videoio;general;opencv_videostab;general;opencv_viz;general;/home/winter/Desktop/slam/slambook-master/3rdparty/Sophus/build/libSophus.so;general;g2o_core;general;g2o_stuff;general;g2o_types_sba;
+betaslam_LIB_DEPENDS:STATIC=general;opencv_calib3d;general;opencv_core;general;opencv_dnn;general;opencv_features2d;general;opencv_flann;general;opencv_highgui;general;opencv_imgcodecs;general;opencv_imgproc;general;opencv_ml;general;opencv_objdetect;general;opencv_photo;general;opencv_shape;general;opencv_stitching;general;opencv_superres;general;opencv_video;general;opencv_videoio;general;opencv_videostab;general;opencv_viz;general;opencv_calib3d;general;opencv_core;general;opencv_dnn;general;opencv_features2d;general;opencv_flann;general;opencv_highgui;general;opencv_imgcodecs;general;opencv_imgproc;general;opencv_ml;general;opencv_objdetect;general;opencv_photo;general;opencv_shape;general;opencv_stitching;general;opencv_superres;general;opencv_video;general;opencv_videoio;general;opencv_videostab;general;opencv_viz;general;/home/winter/Desktop/slam/slambook-master/3rdparty/Sophus/build/libSophus.so;general;pcl_common;general;pcl_octree;general;pcl_io;general;pcl_kdtree;general;pcl_search;general;pcl_visualization;general;pcl_sample_consensus;general;pcl_filters;general;/usr/lib/x86_64-linux-gnu/libboost_system.so;general;/usr/lib/x86_64-linux-gnu/libboost_filesystem.so;general;/usr/lib/x86_64-linux-gnu/libboost_thread.so;general;/usr/lib/x86_64-linux-gnu/libboost_date_time.so;general;/usr/lib/x86_64-linux-gnu/libboost_iostreams.so;general;/usr/lib/x86_64-linux-gnu/libboost_serialization.so;general;/usr/lib/x86_64-linux-gnu/libboost_chrono.so;general;/usr/lib/x86_64-linux-gnu/libboost_atomic.so;general;/usr/lib/x86_64-linux-gnu/libboost_regex.so;general;/usr/lib/x86_64-linux-gnu/libpthread.so;general;flann_cpp;general;vtkCommonCore;general;vtksys;general;vtkInteractionStyle;general;vtkCommonDataModel;general;vtkCommonMath;general;vtkCommonMisc;general;vtkCommonSystem;general;vtkCommonTransforms;general;vtkFiltersExtraction;general;vtkCommonExecutionModel;general;vtkFiltersCore;general;vtkFiltersGeneral;general;vtkCommonComputationalGeometry;general;vtkFiltersStatistics;general;vtkImagingFourier;general;vtkImagingCore;general;vtkalglib;general;vtkFiltersSources;general;vtkRenderingCore;general;vtkCommonColor;general;vtkFiltersGeometry;general;vtkInteractionWidgets;general;vtkFiltersHybrid;general;vtkImagingSources;general;vtkFiltersModeling;general;vtkImagingColor;general;vtkImagingGeneral;general;vtkImagingHybrid;general;vtkIOImage;general;vtkDICOMParser;general;vtkmetaio;general;vtkzlib;general;vtkjpeg;general;vtkpng;general;vtktiff;general;vtkRenderingAnnotation;general;vtkRenderingFreeType;general;vtkfreetype;general;vtkRenderingVolume;general;vtkIOXML;general;vtkIOCore;general;vtkIOXMLParser;general;vtkexpat;general;vtkGeovisCore;general;vtkInfovisCore;general;vtkInfovisLayout;general;vtkViewsCore;general;vtkFiltersParallelImaging;general;vtkFiltersImaging;general;vtkFiltersParallel;general;vtkIOLegacy;general;vtkParallelCore;general;vtkFiltersVerdict;general;verdict;general;vtklibxml2;general;vtksqlite;general;vtkRenderingLabel;general;vtkImagingStencil;general;vtkRenderingGL2PSOpenGL2;general;vtkRenderingOpenGL2;general;vtkglew;general;vtkgl2ps;general;vtkImagingMorphological;general;vtkIOGeometry;general;vtkFiltersAMR;general;vtkIOExodus;general;vtkexoIIc;general;vtkNetCDF;general;vtkNetCDF_cxx;general;vtkhdf5_hl;general;vtkhdf5;general;vtkIOAMR;general;vtkIOTecplotTable;general;vtkjsoncpp;general;vtkInteractionImage;general;vtkRenderingContext2D;general;vtkIOPLY;general;vtkIOInfovis;general;vtkFiltersPoints;general;vtkIOParallel;general;vtkIONetCDF;general;vtkViewsInfovis;general;vtkChartsCore;general;vtkRenderingVolumeOpenGL2;general;vtkImagingMath;general;vtkIOLSDyna;general;vtkFiltersFlowPaths;general;vtkIOExport;general;vtkRenderingImage;general;vtkFiltersTexture;general;vtkFiltersSelection;general;vtkIOEnSight;general;vtkFiltersHyperTree;general;vtkDomainsChemistry;general;vtkoggtheora;general;vtkDomainsChemistryOpenGL2;general;vtkIOParallelXML;general;vtkRenderingLOD;general;vtkIOMovie;general;vtkFiltersSMP;general;vtkIOImport;general;vtkFiltersGeneric;general;vtkImagingStatistics;general;vtkIOMINC;general;vtkIOSQL;general;vtkFiltersProgrammable;general;vtkIOVideo;general;vtkRenderingContextOpenGL2;general;vtkViewsContext2D;general;g2o_core;general;g2o_stuff;general;g2o_types_sba;
 
 //Value Computed by CMake
 betaslam_SOURCE_DIR:STATIC=/home/winter/Desktop/slam/slambook-master/project/newslam
@@ -296,6 +455,48 @@ betaslam_SOURCE_DIR:STATIC=/home/winter/Desktop/slam/slambook-master/project/new
 # INTERNAL cache entries
 ########################
 
+//ADVANCED property for variable: Boost_ATOMIC_LIBRARY_DEBUG
+Boost_ATOMIC_LIBRARY_DEBUG-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: Boost_ATOMIC_LIBRARY_RELEASE
+Boost_ATOMIC_LIBRARY_RELEASE-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: Boost_CHRONO_LIBRARY_DEBUG
+Boost_CHRONO_LIBRARY_DEBUG-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: Boost_CHRONO_LIBRARY_RELEASE
+Boost_CHRONO_LIBRARY_RELEASE-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: Boost_DATE_TIME_LIBRARY_DEBUG
+Boost_DATE_TIME_LIBRARY_DEBUG-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: Boost_DATE_TIME_LIBRARY_RELEASE
+Boost_DATE_TIME_LIBRARY_RELEASE-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: Boost_FILESYSTEM_LIBRARY_DEBUG
+Boost_FILESYSTEM_LIBRARY_DEBUG-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: Boost_FILESYSTEM_LIBRARY_RELEASE
+Boost_FILESYSTEM_LIBRARY_RELEASE-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: Boost_INCLUDE_DIR
+Boost_INCLUDE_DIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: Boost_IOSTREAMS_LIBRARY_DEBUG
+Boost_IOSTREAMS_LIBRARY_DEBUG-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: Boost_IOSTREAMS_LIBRARY_RELEASE
+Boost_IOSTREAMS_LIBRARY_RELEASE-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: Boost_LIBRARY_DIR_DEBUG
+Boost_LIBRARY_DIR_DEBUG-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: Boost_LIBRARY_DIR_RELEASE
+Boost_LIBRARY_DIR_RELEASE-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: Boost_REGEX_LIBRARY_DEBUG
+Boost_REGEX_LIBRARY_DEBUG-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: Boost_REGEX_LIBRARY_RELEASE
+Boost_REGEX_LIBRARY_RELEASE-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: Boost_SERIALIZATION_LIBRARY_DEBUG
+Boost_SERIALIZATION_LIBRARY_DEBUG-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: Boost_SERIALIZATION_LIBRARY_RELEASE
+Boost_SERIALIZATION_LIBRARY_RELEASE-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: Boost_SYSTEM_LIBRARY_DEBUG
+Boost_SYSTEM_LIBRARY_DEBUG-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: Boost_SYSTEM_LIBRARY_RELEASE
+Boost_SYSTEM_LIBRARY_RELEASE-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: Boost_THREAD_LIBRARY_DEBUG
+Boost_THREAD_LIBRARY_DEBUG-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: Boost_THREAD_LIBRARY_RELEASE
+Boost_THREAD_LIBRARY_RELEASE-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_AR
 CMAKE_AR-ADVANCED:INTERNAL=1
 //This is the directory where this CMakeCache.txt was created
@@ -338,6 +539,8 @@ CMAKE_C_FLAGS_MINSIZEREL-ADVANCED:INTERNAL=1
 CMAKE_C_FLAGS_RELEASE-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_C_FLAGS_RELWITHDEBINFO
 CMAKE_C_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
+//Path to cache edit program executable.
+CMAKE_EDIT_COMMAND:INTERNAL=/usr/bin/cmake-gui
 //Executable file format
 CMAKE_EXECUTABLE_FORMAT:INTERNAL=ELF
 //ADVANCED property for variable: CMAKE_EXE_LINKER_FLAGS
@@ -360,6 +563,14 @@ CMAKE_GENERATOR:INTERNAL=Unix Makefiles
 CMAKE_GENERATOR_PLATFORM:INTERNAL=
 //Name of generator toolset.
 CMAKE_GENERATOR_TOOLSET:INTERNAL=
+//Have symbol pthread_create
+CMAKE_HAVE_LIBC_CREATE:INTERNAL=
+//Have library pthreads
+CMAKE_HAVE_PTHREADS_CREATE:INTERNAL=
+//Have library pthread
+CMAKE_HAVE_PTHREAD_CREATE:INTERNAL=1
+//Have include pthread.h
+CMAKE_HAVE_PTHREAD_H:INTERNAL=1
 //Source directory with the top level CMakeLists.txt file for this
 // project
 CMAKE_HOME_DIRECTORY:INTERNAL=/home/winter/Desktop/slam/slambook-master/project/newslam
@@ -421,6 +632,173 @@ CMAKE_STRIP-ADVANCED:INTERNAL=1
 CMAKE_UNAME:INTERNAL=/bin/uname
 //ADVANCED property for variable: CMAKE_VERBOSE_MAKEFILE
 CMAKE_VERBOSE_MAKEFILE-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: EIGEN_INCLUDE_DIR
+EIGEN_INCLUDE_DIR-ADVANCED:INTERNAL=1
+//Details about finding Eigen
+FIND_PACKAGE_MESSAGE_DETAILS_Eigen:INTERNAL=[/usr/local/include/eigen3][v()]
 //Details about finding OpenCV
-FIND_PACKAGE_MESSAGE_DETAILS_OpenCV:INTERNAL=[/usr/local][v3.4.0(3.1)]
+FIND_PACKAGE_MESSAGE_DETAILS_OpenCV:INTERNAL=[/usr/local][v3.4.0()]
+//Details about finding PCL
+FIND_PACKAGE_MESSAGE_DETAILS_PCL:INTERNAL=[pcl_common;pcl_octree;pcl_io;pcl_kdtree;pcl_search;pcl_visualization;pcl_sample_consensus;pcl_filters;/usr/lib/x86_64-linux-gnu/libboost_system.so;/usr/lib/x86_64-linux-gnu/libboost_filesystem.so;/usr/lib/x86_64-linux-gnu/libboost_thread.so;/usr/lib/x86_64-linux-gnu/libboost_date_time.so;/usr/lib/x86_64-linux-gnu/libboost_iostreams.so;/usr/lib/x86_64-linux-gnu/libboost_serialization.so;/usr/lib/x86_64-linux-gnu/libboost_chrono.so;/usr/lib/x86_64-linux-gnu/libboost_atomic.so;/usr/lib/x86_64-linux-gnu/libboost_regex.so;/usr/lib/x86_64-linux-gnu/libpthread.so;flann_cpp;vtkCommonCore;vtksys;vtkInteractionStyle;vtkCommonDataModel;vtkCommonMath;vtkCommonMisc;vtkCommonSystem;vtkCommonTransforms;vtkFiltersExtraction;vtkCommonExecutionModel;vtkFiltersCore;vtkFiltersGeneral;vtkCommonComputationalGeometry;vtkFiltersStatistics;vtkImagingFourier;vtkImagingCore;vtkalglib;vtkFiltersSources;vtkRenderingCore;vtkCommonColor;vtkFiltersGeometry;vtkInteractionWidgets;vtkFiltersHybrid;vtkImagingSources;vtkFiltersModeling;vtkImagingColor;vtkImagingGeneral;vtkImagingHybrid;vtkIOImage;vtkDICOMParser;vtkmetaio;vtkzlib;vtkjpeg;vtkpng;vtktiff;vtkRenderingAnnotation;vtkRenderingFreeType;vtkfreetype;vtkRenderingVolume;vtkIOXML;vtkIOCore;vtkIOXMLParser;vtkexpat;vtkGeovisCore;vtkInfovisCore;vtkInfovisLayout;vtkViewsCore;vtkproj4;vtkFiltersParallelImaging;vtkFiltersImaging;vtkFiltersParallel;vtkIOLegacy;vtkParallelCore;vtkFiltersVerdict;verdict;vtklibxml2;vtksqlite;vtkRenderingLabel;vtkImagingStencil;vtkRenderingGL2PSOpenGL2;vtkRenderingOpenGL2;vtkglew;vtkgl2ps;vtkImagingMorphological;vtkIOGeometry;vtkFiltersAMR;vtkIOExodus;vtkexoIIc;vtkNetCDF;vtkNetCDF_cxx;vtkhdf5_hl;vtkhdf5;vtkIOAMR;vtkIOTecplotTable;vtkjsoncpp;vtkInteractionImage;vtkRenderingContext2D;vtkIOPLY;vtkIOInfovis;vtkFiltersPoints;vtkIOParallel;vtkIONetCDF;vtkViewsInfovis;vtkChartsCore;vtkRenderingVolumeOpenGL2;vtkImagingMath;vtkIOLSDyna;vtkFiltersFlowPaths;vtkIOExport;vtkRenderingImage;vtkFiltersTexture;vtkFiltersSelection;vtkIOEnSight;vtkFiltersHyperTree;vtkDomainsChemistry;vtkoggtheora;vtkDomainsChemistryOpenGL2;vtkIOParallelXML;vtkRenderingLOD;vtkIOMovie;vtkFiltersSMP;vtkIOImport;vtkFiltersGeneric;vtkImagingStatistics;vtkIOMINC;vtkIOSQL;vtkFiltersProgrammable;vtkIOVideo;vtkRenderingContextOpenGL2;vtkViewsContext2D][/usr/local/include/pcl-1.9;/usr/local/include/eigen3;/usr/include;/usr/local/include/vtk-7.1][v()]
+//Details about finding PCL_COMMON
+FIND_PACKAGE_MESSAGE_DETAILS_PCL_COMMON:INTERNAL=[/usr/local/lib/libpcl_common.so][/usr/local/include/pcl-1.9][v()]
+//Details about finding PCL_FILTERS
+FIND_PACKAGE_MESSAGE_DETAILS_PCL_FILTERS:INTERNAL=[/usr/local/lib/libpcl_filters.so][/usr/local/include/pcl-1.9][v()]
+//Details about finding PCL_GEOMETRY
+FIND_PACKAGE_MESSAGE_DETAILS_PCL_GEOMETRY:INTERNAL=[/usr/local/include/pcl-1.9][v()]
+//Details about finding PCL_IO
+FIND_PACKAGE_MESSAGE_DETAILS_PCL_IO:INTERNAL=[/usr/local/lib/libpcl_io.so][/usr/local/include/pcl-1.9][v()]
+//Details about finding PCL_KDTREE
+FIND_PACKAGE_MESSAGE_DETAILS_PCL_KDTREE:INTERNAL=[/usr/local/lib/libpcl_kdtree.so][/usr/local/include/pcl-1.9][v()]
+//Details about finding PCL_OCTREE
+FIND_PACKAGE_MESSAGE_DETAILS_PCL_OCTREE:INTERNAL=[/usr/local/lib/libpcl_octree.so][/usr/local/include/pcl-1.9][v()]
+//Details about finding PCL_SAMPLE_CONSENSUS
+FIND_PACKAGE_MESSAGE_DETAILS_PCL_SAMPLE_CONSENSUS:INTERNAL=[/usr/local/lib/libpcl_sample_consensus.so][/usr/local/include/pcl-1.9][v()]
+//Details about finding PCL_SEARCH
+FIND_PACKAGE_MESSAGE_DETAILS_PCL_SEARCH:INTERNAL=[/usr/local/lib/libpcl_search.so][/usr/local/include/pcl-1.9][v()]
+//Details about finding PCL_VISUALIZATION
+FIND_PACKAGE_MESSAGE_DETAILS_PCL_VISUALIZATION:INTERNAL=[/usr/local/lib/libpcl_visualization.so][/usr/local/include/pcl-1.9][v()]
+//Details about finding Threads
+FIND_PACKAGE_MESSAGE_DETAILS_Threads:INTERNAL=[TRUE][v()]
+//Details about finding libusb-1.0
+FIND_PACKAGE_MESSAGE_DETAILS_libusb-1.0:INTERNAL=[/usr/include][v()]
+FLANN_CFLAGS:INTERNAL=
+FLANN_CFLAGS_I:INTERNAL=
+FLANN_CFLAGS_OTHER:INTERNAL=
+FLANN_FOUND:INTERNAL=1
+FLANN_INCLUDEDIR:INTERNAL=/usr/include
+FLANN_INCLUDE_DIRS:INTERNAL=
+FLANN_LDFLAGS:INTERNAL=-lflann_cpp
+FLANN_LDFLAGS_OTHER:INTERNAL=
+FLANN_LIBDIR:INTERNAL=/usr/lib/x86_64-linux-gnu
+FLANN_LIBRARIES:INTERNAL=flann_cpp
+FLANN_LIBRARY_DIRS:INTERNAL=
+FLANN_LIBS:INTERNAL=
+FLANN_LIBS_L:INTERNAL=
+FLANN_LIBS_OTHER:INTERNAL=
+FLANN_LIBS_PATHS:INTERNAL=
+FLANN_PREFIX:INTERNAL=/usr
+FLANN_STATIC_CFLAGS:INTERNAL=
+FLANN_STATIC_CFLAGS_I:INTERNAL=
+FLANN_STATIC_CFLAGS_OTHER:INTERNAL=
+FLANN_STATIC_INCLUDE_DIRS:INTERNAL=
+FLANN_STATIC_LDFLAGS:INTERNAL=-lflann_cpp
+FLANN_STATIC_LDFLAGS_OTHER:INTERNAL=
+FLANN_STATIC_LIBDIR:INTERNAL=
+FLANN_STATIC_LIBRARIES:INTERNAL=flann_cpp
+FLANN_STATIC_LIBRARY_DIRS:INTERNAL=
+FLANN_STATIC_LIBS:INTERNAL=
+FLANN_STATIC_LIBS_L:INTERNAL=
+FLANN_STATIC_LIBS_OTHER:INTERNAL=
+FLANN_STATIC_LIBS_PATHS:INTERNAL=
+FLANN_VERSION:INTERNAL=1.8.4
+FLANN_flann_INCLUDEDIR:INTERNAL=
+FLANN_flann_LIBDIR:INTERNAL=
+FLANN_flann_PREFIX:INTERNAL=
+FLANN_flann_VERSION:INTERNAL=
+//ADVANCED property for variable: PCL_COMMON_INCLUDE_DIR
+PCL_COMMON_INCLUDE_DIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: PCL_COMMON_LIBRARY
+PCL_COMMON_LIBRARY-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: PCL_COMMON_LIBRARY_DEBUG
+PCL_COMMON_LIBRARY_DEBUG-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: PCL_FILTERS_INCLUDE_DIR
+PCL_FILTERS_INCLUDE_DIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: PCL_FILTERS_LIBRARY
+PCL_FILTERS_LIBRARY-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: PCL_FILTERS_LIBRARY_DEBUG
+PCL_FILTERS_LIBRARY_DEBUG-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: PCL_GEOMETRY_INCLUDE_DIR
+PCL_GEOMETRY_INCLUDE_DIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: PCL_IO_INCLUDE_DIR
+PCL_IO_INCLUDE_DIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: PCL_IO_LIBRARY
+PCL_IO_LIBRARY-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: PCL_IO_LIBRARY_DEBUG
+PCL_IO_LIBRARY_DEBUG-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: PCL_KDTREE_INCLUDE_DIR
+PCL_KDTREE_INCLUDE_DIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: PCL_KDTREE_LIBRARY
+PCL_KDTREE_LIBRARY-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: PCL_KDTREE_LIBRARY_DEBUG
+PCL_KDTREE_LIBRARY_DEBUG-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: PCL_OCTREE_INCLUDE_DIR
+PCL_OCTREE_INCLUDE_DIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: PCL_OCTREE_LIBRARY
+PCL_OCTREE_LIBRARY-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: PCL_OCTREE_LIBRARY_DEBUG
+PCL_OCTREE_LIBRARY_DEBUG-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: PCL_SAMPLE_CONSENSUS_INCLUDE_DIR
+PCL_SAMPLE_CONSENSUS_INCLUDE_DIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: PCL_SAMPLE_CONSENSUS_LIBRARY
+PCL_SAMPLE_CONSENSUS_LIBRARY-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: PCL_SAMPLE_CONSENSUS_LIBRARY_DEBUG
+PCL_SAMPLE_CONSENSUS_LIBRARY_DEBUG-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: PCL_SEARCH_INCLUDE_DIR
+PCL_SEARCH_INCLUDE_DIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: PCL_SEARCH_LIBRARY
+PCL_SEARCH_LIBRARY-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: PCL_SEARCH_LIBRARY_DEBUG
+PCL_SEARCH_LIBRARY_DEBUG-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: PCL_VISUALIZATION_INCLUDE_DIR
+PCL_VISUALIZATION_INCLUDE_DIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: PCL_VISUALIZATION_LIBRARY
+PCL_VISUALIZATION_LIBRARY-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: PCL_VISUALIZATION_LIBRARY_DEBUG
+PCL_VISUALIZATION_LIBRARY_DEBUG-ADVANCED:INTERNAL=1
+PC_EIGEN_CFLAGS:INTERNAL=-I/usr/local/include/eigen3
+PC_EIGEN_CFLAGS_I:INTERNAL=
+PC_EIGEN_CFLAGS_OTHER:INTERNAL=
+PC_EIGEN_FOUND:INTERNAL=1
+PC_EIGEN_INCLUDEDIR:INTERNAL=
+PC_EIGEN_INCLUDE_DIRS:INTERNAL=/usr/local/include/eigen3
+PC_EIGEN_LDFLAGS:INTERNAL=
+PC_EIGEN_LDFLAGS_OTHER:INTERNAL=
+PC_EIGEN_LIBDIR:INTERNAL=
+PC_EIGEN_LIBRARIES:INTERNAL=
+PC_EIGEN_LIBRARY_DIRS:INTERNAL=
+PC_EIGEN_LIBS:INTERNAL=
+PC_EIGEN_LIBS_L:INTERNAL=
+PC_EIGEN_LIBS_OTHER:INTERNAL=
+PC_EIGEN_LIBS_PATHS:INTERNAL=
+PC_EIGEN_PREFIX:INTERNAL=/usr/local
+PC_EIGEN_STATIC_CFLAGS:INTERNAL=-I/usr/local/include/eigen3
+PC_EIGEN_STATIC_CFLAGS_I:INTERNAL=
+PC_EIGEN_STATIC_CFLAGS_OTHER:INTERNAL=
+PC_EIGEN_STATIC_INCLUDE_DIRS:INTERNAL=/usr/local/include/eigen3
+PC_EIGEN_STATIC_LDFLAGS:INTERNAL=
+PC_EIGEN_STATIC_LDFLAGS_OTHER:INTERNAL=
+PC_EIGEN_STATIC_LIBDIR:INTERNAL=
+PC_EIGEN_STATIC_LIBRARIES:INTERNAL=
+PC_EIGEN_STATIC_LIBRARY_DIRS:INTERNAL=
+PC_EIGEN_STATIC_LIBS:INTERNAL=
+PC_EIGEN_STATIC_LIBS_L:INTERNAL=
+PC_EIGEN_STATIC_LIBS_OTHER:INTERNAL=
+PC_EIGEN_STATIC_LIBS_PATHS:INTERNAL=
+PC_EIGEN_VERSION:INTERNAL=3.3.4
+PC_EIGEN_eigen3_INCLUDEDIR:INTERNAL=
+PC_EIGEN_eigen3_LIBDIR:INTERNAL=
+PC_EIGEN_eigen3_PREFIX:INTERNAL=
+PC_EIGEN_eigen3_VERSION:INTERNAL=
+//ADVANCED property for variable: PKG_CONFIG_EXECUTABLE
+PKG_CONFIG_EXECUTABLE-ADVANCED:INTERNAL=1
+//Last used BOOST_INCLUDEDIR value.
+_BOOST_INCLUDEDIR_LAST:INTERNAL=/usr/include
+//Last used Boost_ADDITIONAL_VERSIONS value.
+_Boost_ADDITIONAL_VERSIONS_LAST:INTERNAL=1.58.0;1.58;1.68.0;1.68;1.67.0;1.67;1.66.0;1.66;1.65.1;1.65.0;1.65;1.64.0;1.64;1.63.0;1.63;1.62.0;1.62;1.61.0;1.61;1.60.0;1.60;1.59.0;1.59;1.58.0;1.58;1.57.0;1.57;1.56.0;1.56;1.55.0;1.55;1.54.0;1.54;1.53.0;1.53;1.52.0;1.52;1.51.0;1.51;1.50.0;1.50;1.49.0;1.49;1.48.0;1.48;1.47.0;1.47
+//Components requested for this build tree.
+_Boost_COMPONENTS_SEARCHED:INTERNAL=atomic;chrono;date_time;filesystem;iostreams;regex;serialization;system;thread
+//Last used Boost_INCLUDE_DIR value.
+_Boost_INCLUDE_DIR_LAST:INTERNAL=/usr/include
+//Last used Boost_LIBRARY_DIR_DEBUG value.
+_Boost_LIBRARY_DIR_DEBUG_LAST:INTERNAL=/usr/lib/x86_64-linux-gnu
+//Last used Boost_LIBRARY_DIR_RELEASE value.
+_Boost_LIBRARY_DIR_RELEASE_LAST:INTERNAL=/usr/lib/x86_64-linux-gnu
+//Last used Boost_NAMESPACE value.
+_Boost_NAMESPACE_LAST:INTERNAL=boost
+//Last used Boost_USE_MULTITHREADED value.
+_Boost_USE_MULTITHREADED_LAST:INTERNAL=TRUE
+__pkg_config_checked_FLANN:INTERNAL=1
+__pkg_config_checked_PC_EIGEN:INTERNAL=1
+prefix_result:INTERNAL=/usr/lib/x86_64-linux-gnu
 

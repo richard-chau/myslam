@@ -2,6 +2,7 @@
 #include "betaslam/config.h"
 #include "betaslam/g2o_types.h"
 
+
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/calib3d/calib3d.hpp>
@@ -149,7 +150,7 @@ void VO::PosePnP()
   
   optimizer.initializeOptimization();
   optimizer.optimize(10);
-  
+  //pose->estimate() //Eigen::Isometry3d
   Tcw_ = SE3 (
     pose->estimate().rotation(),
     pose->estimate().translation()
@@ -203,6 +204,10 @@ bool VO::addFrame(Frame::Ptr frame)
   if(VO::methods == 1) 
     return addFrame_ds(frame);
   
+  bool visualize = true;
+  
+  
+  
   switch(state_) {
     case INITIALIZING: {
      state_ = OK;
@@ -211,6 +216,10 @@ bool VO::addFrame(Frame::Ptr frame)
      //updateRef();
      //addMapPoints(1);
      addKeyFrame();
+     
+     if (visualize) {
+	cloud = image2PointCloud( curr_->color_,curr_->depth_, curr_->camera_ );
+     }
 
      break;
     }
@@ -227,6 +236,13 @@ bool VO::addFrame(Frame::Ptr frame)
      if (checkgoodPose()) { //If Tcw_ is good, then assign it to curr_
        //curr_->Tcw_ = Tcr_ * ref_->Tcw_;
        curr_->Tcw_ = Tcw_;
+       
+       if (visualize) {
+	  cloud = joinPointCloud( cloud, curr_, Tcw_);
+	  //if ( visualize == true )
+	      //viewer.showCloud( cloud );
+       }
+       
        updateMap(); // addpoints() in this function
        //ref_ = curr_; // only occurs in addKeyFrame() and INITIALIZING
        //updateRef();
@@ -774,4 +790,5 @@ bool VO::addFrame_ds(Frame::Ptr frame)
 
 
 int betaslam::VO::methods = 0;
+
 }

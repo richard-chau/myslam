@@ -5,6 +5,7 @@ add_library( betaslam SHARED
     vo.cpp
     g2o_types.cpp
     mappoint.cpp
+    pointcloud.cpp
 )
 
 target_link_libraries( betaslam

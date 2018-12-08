@@ -5,6 +5,8 @@
 #include "betaslam/frame.h"
 #include "betaslam/map.h"
 #include "betaslam/config.h"
+#include "betaslam/pointcloud.h"
+
 #include <opencv2/features2d/features2d.hpp>
 
 namespace betaslam {
@@ -47,7 +49,7 @@ public:
 					    Config::get_param("level_pyramid" ))),
 	matcher(new cv::flann::LshIndexParams(5,10,2)), map_(new Map),
 	map_point_erase_ratio_(Config::get_param("map_point_erase_ratio")){
-	  
+	
 	Eigen::Isometry3d tmp_tcw = Eigen::Isometry3d::Identity();// [t | R] 
 	
 	Tcw_ = SE3 (
@@ -78,6 +80,8 @@ public:
   
   static int methods;
   
+  
+  PointCloud::Ptr cloud;
   
 protected:
   void extractKAD(); //keypoint and descriptors

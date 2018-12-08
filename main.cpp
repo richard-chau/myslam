@@ -11,6 +11,8 @@
 #include "betaslam/config.h"
 #include "betaslam/vo.h"
 #include "betaslam/frame.h"
+#include "betaslam/pointcloud.h"
+
 #include <boost/timer.hpp>
 
 
@@ -69,6 +71,9 @@ int main(int argc, char **argv) {
     vis.showWidget( "World", world_coor );
     vis.showWidget( "Camera", camera_coor );
     
+    
+    pcl::visualization::CloudViewer viewer("viewer");
+    
     for(int i=0; i<rgb_files.size(); ++i) {
      
 	Mat color = cv::imread(rgb_files[i]);
@@ -119,12 +124,14 @@ int main(int argc, char **argv) {
 	    cv::circle(img_show, cv::Point2f(pixel(0,0), pixel(1,0)), 3, cv::Scalar(0,0,255), 2);
 	}
 	
+	viewer.showCloud(vo->cloud);
+	
         cv::imshow("image", img_show);//color );
         cv::waitKey(1);
         vis.setWidgetPose( "Camera", M);
         vis.spinOnce(1, false);
 	
-	
+	//pcl::io::savePCDFile( "result.pcd", vo->cloud );
 	//cv::namedWindow("Display Image", cv::WINDOW_AUTOSIZE );
 	//cv::imshow("Display Image", color);
 	//cv::waitKey(0);
@@ -133,7 +140,7 @@ int main(int argc, char **argv) {
 	//cout << pFrame->Tcw_ << endl;
     }
     
-    
+    pcl::io::savePCDFile( "result.pcd", *(vo->cloud) );
     
     
     std::cout << "Hello, world!" << std::endl;

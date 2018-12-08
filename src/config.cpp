@@ -33,6 +33,9 @@ namespace betaslam {
       config_->kmap["map_point_erase_ratio"]= 0.1;////0.5;
       
       config_->kmap["min_ds_map_cnt"] = 10000; //direct-semidense
+      
+      config_->kmap["voxel_grid"] = 0.01;
+      
     }
   }
 }
